@@ -5,7 +5,7 @@ $(document).ready(function(){
     // verificar_sesion();
     // obtener_datos();
     llenar_departamentos();
-    mostrar_direcciones();
+    // mostrar_card_direcciones();
     bsCustomFileInput.init();
     mostrar_historial();
 
@@ -69,6 +69,51 @@ $(document).ready(function(){
             $('#municipio').val('').trigger('change');
         })
     })
+
+    
+    function mostrar_direcciones() {
+        //nos comunicamos con nuestro controlador
+        funcion="mostrar_direcciones";
+        $.post('../controllers/UsuarioMunicipioController.php',
+           { funcion }/* solo enviamos al controlador una funcion para indicarle al controlador
+           que slo ejecute esa funcion*/,
+           (response)=>{
+               // console.log(response);
+            //la encriptacion la desencriptamos
+           //  console.log(response);
+            let direcciones=JSON.parse(response);
+            let template='';//aquí se almacenará todo nuestro codigo html
+            // hacemos un foreach para recorrer todos los departamentos
+            let contador=0;
+            direcciones.forEach(direccion => {
+               contador++;
+               template+=`
+               <div class="callout callout-info">
+                   <div class="card-header">
+                       <strong>Dirección ${contador}</strong>
+                       <div class="card-tools">
+                           <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tool">
+                               <i class="fas fa-trash-alt"></i>
+                           </button>
+                       </div>
+                   </div>
+                   <div class="card-body">
+                       <h2 class="lead"><b>${direccion.direccion}</b></h2>
+                       <p class="text-muted text-sm"><b>Referencia: ${direccion.referencia}</b></p>
+                       <ul class="text-sm">
+                           <li class="text-sm">
+                               <i class="fas fa-lg fa-building"></i>
+                               :${direccion.municipio}, ${direccion.departamento}
+                           </li>
+                       </ul>
+                   </div>
+               </div>
+               `;
+               $('#direcciones').html(template);
+            });
+
+        })
+    }
 
     async function read_notificaciones(){
         funcion="read_notificaciones";
@@ -494,6 +539,121 @@ $(document).ready(function(){
         }
     }
 
+    async function mostrar_card_direcciones(){
+        funcion="mostrar_direcciones";
+        let data = await fetch('../controllers/UsuarioMunicipioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
+        })
+        if (data.ok) {
+            let response = await data.text();
+            console.log(response);
+            try {
+                let direcciones=JSON.parse(response);
+                console.log(direcciones);
+                let contador=0;
+                let template=`
+                    <div class="card-header border-bottom-0 bg-dark text-white">
+                        <strong>Direcciones de Envío</strong>
+                    </div>
+                    <div class="card-body pt-0 mt-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Mis Direcciones
+                                        </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                            <div id="direcciones" class="accordion-body">
+                                            <!-- aquí se colocan las direcciones dinamicamente -->
+                `
+                direcciones.forEach(direccion => {
+                    contador++;
+                    template+=`
+                    <div class="callout callout-info">
+                        <div class="card-header">
+                            <strong>Dirección ${contador}</strong>
+                            <div class="card-tools">
+                                <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tool">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h2 class="lead"><b>${direccion.direccion}</b></h2>
+                            <p class="text-muted text-sm"><b>Referencia: ${direccion.referencia}</b></p>
+                            <ul class="text-sm">
+                                <li class="text-sm">
+                                    <i class="fas fa-lg fa-building"></i>
+                                    :${direccion.municipio}, ${direccion.departamento}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    `;
+                });
+                template+=`
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Agregar Dirección
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <form id="form-direccion">
+                                                    <div class="form-group">
+                                                        <label>Departamento: </label>
+                                                        <select id="departamento" class="form-control" style="width:100%" required></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Municipio: </label>
+                                                        <select id="municipio" class="form-control" style="width:100%" required></select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Direccion: </label>
+                                                        <input id="direccion" class="form-control" placeholder="Ingrese su direccion" required></input>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Referencia: </label>
+                                                        <input id="referencia" class="form-control" placeholder="Ingrese alguna referencia"></input>
+                                                    </div>
+                                                    <div class="text-center">
+                                                        <button type="submit" class="btn btn-outline-dark">Crear Punto</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <img src="../util/img/direccion.png" alt="user-avatar" class="img-circle img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                $('#card_direcciones').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+              })
+        }
+    }
+
     async function verificar_sesion() {
 
         funcion="verificar_sesion";
@@ -516,6 +676,8 @@ $(document).ready(function(){
                     read_notificaciones();//trae las notificaciones dependiendo del usuario
                     read_favoritos();//
                     mostrar_card_usuario();
+                    mostrar_card_direcciones();
+                    // mostrar_direcciones();
                     CloseLoader();
 
                 }else{
@@ -595,49 +757,6 @@ $(document).ready(function(){
         e.preventDefault();
     })
 
-    function mostrar_direcciones() {
-         //nos comunicamos con nuestro controlador
-         funcion="mostrar_direcciones";
-         $.post('../controllers/UsuarioMunicipioController.php',
-            { funcion }/* solo enviamos al controlador una funcion para indicarle al controlador
-            que slo ejecute esa funcion*/,
-            (response)=>{
-                // console.log(response);
-             //la encriptacion la desencriptamos
-            //  console.log(response);
-             let direcciones=JSON.parse(response);
-             let template='';//aquí se almacenará todo nuestro codigo html
-             // hacemos un foreach para recorrer todos los departamentos
-             let contador=0;
-             direcciones.forEach(direccion => {
-                contador++;
-                template+=`
-                <div class="callout callout-info">
-                    <div class="card-header">
-                        <strong>Dirección ${contador}</strong>
-                        <div class="card-tools">
-                            <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tool">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <h2 class="lead"><b>${direccion.direccion}</b></h2>
-                        <p class="text-muted text-sm"><b>Referencia: ${direccion.referencia}</b></p>
-                        <ul class="text-sm">
-                            <li class="text-sm">
-                                <i class="fas fa-lg fa-building"></i>
-                                :${direccion.municipio}, ${direccion.departamento}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                `;
-                $('#direcciones').html(template);
-             });
-
-         })
-    }
 
     $(document).on('click', '.eliminar_direccion', (e)=>{
         let elemento = $(this)[0].activeElement;

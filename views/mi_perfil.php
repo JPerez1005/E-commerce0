@@ -114,65 +114,8 @@
               </div>
             </div>
             <!-- Direcciones de envío -->
-            <div class="card card-light d-flex flex-fill">
-                <div class="card-header border-bottom-0 bg-dark text-white">
-                  <strong>Direcciones de Envío</strong>
-                </div>
-                <div class="card-body pt-0 mt-3">
-                  <div class="row">
-                    <div class="col-8">
-                      <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header">
-                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Mis Direcciones
-                          </button>
-                          </h2>
-                          <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div id="direcciones" class="accordion-body">
-                              <!-- aquí se colocan las direcciones dinamicamente -->
-                            </div>
-                          </div>
-                        </div>
-                        <div class="accordion-item">
-                          <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                              Agregar Dirección
-                            </button>
-                          </h2>
-                          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <form id="form-direccion">
-                                <div class="form-group">
-                                  <label>Departamento: </label>
-                                  <select id="departamento" class="form-control" style="width:100%" required></select>
-                                </div>
-                                <div class="form-group">
-                                  <label>Municipio: </label>
-                                  <select id="municipio" class="form-control" style="width:100%" required></select>
-                                </div>
-                                <div class="form-group">
-                                  <label>Direccion: </label>
-                                  <input id="direccion" class="form-control" placeholder="Ingrese su direccion" required></input>
-                                </div>
-                                <div class="form-group">
-                                  <label>Referencia: </label>
-                                  <input id="referencia" class="form-control" placeholder="Ingrese alguna referencia"></input>
-                                </div>
-                                <div class="text-center">
-                                  <button type="submit" class="btn btn-outline-dark">Crear Punto</button>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-4 text-center">
-                      <img src="../util/img/direccion.png" alt="user-avatar" class="img-circle img-fluid">
-                    </div>
-                  </div>
-                </div>
+            <div id="card_direcciones" class="card card-light d-flex flex-fill">
+                
             </div>
             <div class="card card-light d-flex flex-fill">
                 <div class="card-header border-bottom-0">
@@ -398,4 +341,4 @@
     include_once 'Layouts/general/footer.php';
     ?>
 
-    <script src="mi_perfil.js"></script>
+    <script src="MiPerfil.js"></script>
