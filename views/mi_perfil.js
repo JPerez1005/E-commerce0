@@ -1,8 +1,8 @@
 $(document).ready(function(){
     var funcion;
     Loader();
-    setTimeout(verificar_sesion,10000);
-    // verificar_sesion();
+    // setTimeout(verificar_sesion,7000);
+    verificar_sesion();
     // obtener_datos();
     llenar_departamentos();
     // mostrar_card_direcciones();

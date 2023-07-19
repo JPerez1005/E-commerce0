@@ -1,61 +1,35 @@
 $(document).ready(function(){
     var funcion;
     Loader();
-    setTimeout(verificar_sesion,10000);
+    setTimeout(verificar_sesion,2000);
     // verificar_sesion();
-    // obtener_datos();
-    llenar_departamentos();
+    
     // mostrar_card_direcciones();
     bsCustomFileInput.init();
-    mostrar_historial();
 
 
-    
-
-    
-    function mostrar_direcciones() {
-        //nos comunicamos con nuestro controlador
-        funcion="mostrar_direcciones";
-        $.post('../controllers/UsuarioMunicipioController.php',
-           { funcion }/* solo enviamos al controlador una funcion para indicarle al controlador
-           que slo ejecute esa funcion*/,
-           (response)=>{
-               // console.log(response);
-            //la encriptacion la desencriptamos
-           //  console.log(response);
-            let direcciones=JSON.parse(response);
-            let template='';//aquí se almacenará todo nuestro codigo html
-            // hacemos un foreach para recorrer todos los departamentos
-            let contador=0;
-            direcciones.forEach(direccion => {
-               contador++;
-               template+=`
-               <div class="callout callout-info">
-                   <div class="card-header">
-                       <strong>Dirección ${contador}</strong>
-                       <div class="card-tools">
-                           <button dir_id="${direccion.id}" type="button" class="eliminar_direccion btn btn-tool">
-                               <i class="fas fa-trash-alt"></i>
-                           </button>
-                       </div>
-                   </div>
-                   <div class="card-body">
-                       <h2 class="lead"><b>${direccion.direccion}</b></h2>
-                       <p class="text-muted text-sm"><b>Referencia: ${direccion.referencia}</b></p>
-                       <ul class="text-sm">
-                           <li class="text-sm">
-                               <i class="fas fa-lg fa-building"></i>
-                               :${direccion.municipio}, ${direccion.departamento}
-                           </li>
-                       </ul>
-                   </div>
-               </div>
-               `;
-               $('#direcciones').html(template);
-            });
-
-        })
-    }
+    $('#departamento').select2({
+        placeholder: 'Seleccione un departamento',
+        language: {
+            noResults: function(){
+                return "No hay resultado";
+            },
+            searching: function(){
+                return "Buscando....";
+            }
+        }
+    });
+    $('#municipio').select2({
+        placeholder: 'Seleccione un municipio',
+        language: {
+            noResults: function(){
+                return "No hay resultado";
+            },
+            searching: function(){
+                return "Buscando....";
+            }
+        }
+    });
 
     async function read_notificaciones(){
         funcion="read_notificaciones";
@@ -66,10 +40,10 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
+            // console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                // console.log(notificaciones);
                 let template1='';
                 let template2='';
                 let template=`
@@ -490,29 +464,11 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
             try {
                 let direcciones=JSON.parse(response);
-                console.log(direcciones);
                 let contador=0;
-                let template=`
-                    <div class="card-header border-bottom-0 bg-dark text-white">
-                        <strong>Direcciones de Envío</strong>
-                    </div>
-                    <div class="card-body pt-0 mt-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="accordion" id="accordionExample">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            Mis Direcciones
-                                        </button>
-                                        </h2>
-                                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                                            <div id="direcciones" class="accordion-body">
-                                            <!-- aquí se colocan las direcciones dinamicamente -->
-                `
+                let template='';
+                let template2='';
                 direcciones.forEach(direccion => {
                     contador++;
                     template+=`
@@ -537,52 +493,22 @@ $(document).ready(function(){
                         </div>
                     </div>
                     `;
+                    $('#direcciones').html(template);
                 });
-                template+=`
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Agregar Dirección
-                                            </button>
-                                        </h2>
-                                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <form id="form-direccion">
-                                                    <div class="form-group">
-                                                        <label>Departamento: </label>
-                                                        <select id="departamento" class="form-control" style="width:100%" required></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Municipio: </label>
-                                                        <select id="municipio" class="form-control" style="width:100%" required></select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Direccion: </label>
-                                                        <input id="direccion" class="form-control" placeholder="Ingrese su direccion" required></input>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Referencia: </label>
-                                                        <input id="referencia" class="form-control" placeholder="Ingrese alguna referencia"></input>
-                                                    </div>
-                                                    <div class="text-center">
-                                                        <button type="submit" class="btn btn-outline-dark">Crear Punto</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-4 text-center">
-                                <img src="../util/img/direccion.png" alt="user-avatar" class="img-circle img-fluid">
-                            </div>
-                        </div>
-                    </div>
+                template2=`
+                <div class="form-group">
+                    <label>Direccion: </label>
+                    <input id="direccion" class="form-control" placeholder="Ingrese su direccion" required></input>
+                </div>
+                <div class="form-group">
+                    <label>Referencia: </label>
+                    <input id="referencia" class="form-control" placeholder="Ingrese alguna referencia"></input>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-dark">Crear Punto</button>
+                </div>
                 `;
-                $('#card_direcciones').html(template);
+                $('#datos').html(template2);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -596,68 +522,7 @@ $(document).ready(function(){
         }
     }
 
-    $('#departamento').select2({
-        placeholder: 'Seleccione un departamento',
-        language: {
-            noResults: function(){
-                return "No hay resultado";
-            },
-            searching: function(){
-                return "Buscando....";
-            }
-        }
-    });
-    $('#municipio').select2({
-        placeholder: 'Seleccione un municipio',
-        language: {
-            noResults: function(){
-                return "No hay resultado";
-            },
-            searching: function(){
-                return "Buscando....";
-            }
-        }
-    });
-
-    //funcion de llenado, para llenar las opciones del formulario del acordion
-    function llenar_departamentos(){
-        //nos comunicamos con nuestro controlador
-        funcion="llenar_departamentos";
-        $.post('../controllers/DepartamentosController.php', { funcion },(response)=>{
-            //la encriptacion la desencriptamos
-            let departamentos=JSON.parse(response);
-            let template='';//aquí se almacenará todo nuestro codigo html
-            // hacemos un foreach para recorrer todos los departamentos
-            departamentos.forEach(departamento/* es el elemento que hará el recorrido */ => {
-                template+=`
-                <option value="${departamento.id_departamento}">${departamento.departamento}</option>
-                `;
-            });
-            $('#departamento').html(template);
-            $('#departamento').val('').trigger('change');
-        })
-    }
-    //detectamos el municipio dependiendo del departamento
-    $('#departamento').change(function(){
-        let id_departamento=$('#departamento').val();//obtenemos el id del departamento seleccionado
-        funcion="llenar_municipios";
-        $.post('../controllers/MunicipiosController.php', { funcion, id_departamento }, (response) => {
-            //la encriptacion la desencriptamos
-            let municipios=JSON.parse(response);
-            let template='';//aquí se almacenará todo nuestro codigo html
-            // hacemos un foreach para recorrer todos los departamentos
-            municipios.forEach(municipio/* es el elemento que hará el recorrido */ => {
-                template+=`
-                <option value="${municipio.id_municipio}">${municipio.municipio}</option>
-                `;
-            });
-            $('#municipio').html(template);
-            $('#municipio').val('').trigger('change');
-        })
-    })
-
     async function verificar_sesion() {
-
         funcion="verificar_sesion";
         let data = await fetch('../controllers/UsuarioController.php',{
             method:'POST',
@@ -679,9 +544,9 @@ $(document).ready(function(){
                     read_favoritos();//
                     mostrar_card_usuario();
                     mostrar_card_direcciones();
-                    // mostrar_direcciones();
+                    mostrar_historial();
+                    llenar_departamentos();
                     CloseLoader();
-
                 }else{
                     // mostrar_sidebar();
                     // mostrar_navegacion();
@@ -701,25 +566,7 @@ $(document).ready(function(){
               })
         }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
-    
-    
-    function obtener_datos() {
-        funcion = 'obtener_datos';
-        $.post('../controllers/UsuarioController.php', { funcion }, (response)=> {
-            console.log(response);
-            // el controlador nos envia el array codificado a string y aquí lo decodificamos a array
-            let usuario= JSON.parse(response);//con esta linea ya lo tendriamos decodificado
-            // ahora procedemos a mandar los datos a mi_perfil.php
-            $('#username').text(usuario.username);
-            $('#tipo_usuario').text(usuario.tipo_usuario);
-            $('#nombres').text(usuario.nombres + ' ' + usuario.apellidos);
-            $('#avatar_perfil').attr('src','../util/img/users/' + usuario.avatar);
-            $('#dni').text(usuario.dni);
-            $('#email').text(usuario.email);
-            $('#telefono').text(usuario.telefono);
-            
-        })
-    }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
+
 
     $('#form-direccion').submit(e=>{
         funcion='crear_direccion';
@@ -743,7 +590,7 @@ $(document).ready(function(){
                   }).then(function(){
                     $('#form-direccion').trigger('reset');
                     $('#departamento').val('').trigger('change');
-                    mostrar_direcciones();
+                    mostrar_card_direcciones();
                     mostrar_historial();
                   })
             } else {
@@ -795,7 +642,7 @@ $(document).ready(function(){
                                     'Dirección eliminada.',
                                     'success'
                                   )
-                                  mostrar_direcciones();//hace una recarga en la funcion de mostrar direcciones
+                                  mostrar_card_direcciones();//hace una recarga en la funcion de mostrar direcciones
                                   mostrar_historial();//recargamos el historial
                         }else if(response=="error"){
                             swalWithBootstrapButtons.fire(
@@ -866,7 +713,7 @@ $(document).ready(function(){
                             timer: 1500
                           }).then(function(){
                             verificar_sesion();
-                            obtener_datos();
+                            mostrar_card_usuario();
                             mostrar_historial();
                           })
                     }
@@ -983,7 +830,7 @@ $(document).ready(function(){
                   }).then(function(){
                     $('#form-contra').trigger('reset');
                     verificar_sesion();
-                    obtener_datos();
+                    mostrar_card_usuario();
                     mostrar_historial();
                   })
             } else if(response=="error"){
@@ -1062,49 +909,68 @@ $(document).ready(function(){
   });
 
   /**Mostrar el historial-------------------------------------------------------------------------------------------------------------------------- */
-  function mostrar_historial() {
-    funcion="mostrar_historial";
-    $.post('../controllers/HistorialController.php', { funcion }, (response)=>{
-        let historiales=JSON.parse(response);//decodificamos para recibir
-        let template='';
-        historiales.forEach(historial=>{
-            // console.log(historial);
-            template+=`
-            <div class="time-label">
-                <span class="bg-danger">
-                    ${historial[0].fecha}
-                </span>
-            </div>
-            `;
-            historial.forEach(cambio => {
-                // console.log(cambio.descripcion);
-                template+=`
-                <div>
-                    ${cambio.m_icono}
-
-                    <div class="timeline-item">
-                        <span class="time"><i class="far fa-clock"></i>${cambio.hora}</span>
-
-                        <h3 class="timeline-header">
-                            ${cambio.th_icono} se hizo un ${cambio.tipo_historial} en mi ${cambio.modulo}
-                        </h3>
-
-                        <div class="timeline-body">
-                            ${cambio.descripcion}
-                        </div>
+    async function mostrar_historial(){
+        funcion="mostrar_historial";
+        let data = await fetch('../controllers/HistorialController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
+        })
+        if (data.ok) {
+            let response = await data.text();
+            // console.log(response);
+            try {
+                let historiales=JSON.parse(response);
+                console.log(historiales);
+                let template='';
+                historiales.forEach(historial=>{
+                    // console.log(historial);
+                    template+=`
+                    <div class="time-label">
+                        <span class="bg-danger">
+                            ${historial[0].fecha}
+                        </span>
                     </div>
-                </div>
+                    `;
+                    historial.forEach(cambio => {
+                        // console.log(cambio.descripcion);
+                        template+=`
+                        <div>
+                            ${cambio.m_icono}
+
+                            <div class="timeline-item">
+                                <span class="time"><i class="far fa-clock"></i>${cambio.hora}</span>
+
+                                <h3 class="timeline-header">
+                                    ${cambio.th_icono} se hizo un ${cambio.tipo_historial} en mi ${cambio.modulo}
+                                </h3>
+
+                                <div class="timeline-body">
+                                    ${cambio.descripcion}
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                });
+                template+=`
+                    <div>
+                    <i class="far fa-clock bg-gray"></i>
+                    </div>
                 `;
-            });
-        });
-        template+=`
-            <div>
-            <i class="far fa-clock bg-gray"></i>
-            </div>
-        `;
-        $('#historiales').html(template);//en el id historiales implementamos el template
-    });
-  }
+                $('#historiales').html(template);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    }
 
   function Loader(mensaje){
     if (mensaje==''||mensaje==null) {
@@ -1131,5 +997,59 @@ $(document).ready(function(){
     }
   }
 
+  /**Mostrar Lugares en verificacion de usuario----------------------------------------------------------------------------------------------------------------- */
+    //funcion de llenado, para llenar las opciones del formulario del acordion
+    async function llenar_departamentos(){
+        //nos comunicamos con nuestro controlador
+        funcion="llenar_departamentos";
+        let data = await fetch('../controllers/DepartamentosController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let departamentos=JSON.parse(response);
+                // console.log(departamentos);
+                let template='';//aquí se almacenará todo nuestro codigo html
+                // hacemos un foreach para recorrer todos los departamentos
+                departamentos.forEach(departamento/* es el elemento que hará el recorrido */ => {
+                    template+=`
+                    <option value="${departamento.id_departamento}">${departamento.departamento}</option>
+                    `;
+                });
+                $('#departamento').html(template);
+                $('#departamento').val('').trigger('change');
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    }
+    //detectamos el municipio dependiendo del departamento
+    $('#departamento').change(function(){
+        let id_departamento=$('#departamento').val();//obtenemos el id del departamento seleccionado
+        funcion="llenar_municipios";
+        $.post('../controllers/MunicipiosController.php', { funcion, id_departamento }, (response) => {
+            //la encriptacion la desencriptamos
+            let municipios=JSON.parse(response);
+            let template='';//aquí se almacenará todo nuestro codigo html
+            // hacemos un foreach para recorrer todos los departamentos
+            municipios.forEach(municipio/* es el elemento que hará el recorrido */ => {
+                template+=`
+                <option value="${municipio.id_municipio}">${municipio.municipio}</option>
+                `;
+            });
+            $('#municipio').html(template);
+            $('#municipio').val('').trigger('change');
+        })
+    })
 });
 
