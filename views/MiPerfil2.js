@@ -567,109 +567,7 @@ $(document).ready(function(){
         }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
 
-
-    $('#form-direccion').submit(e=>{
-        funcion='crear_direccion';
-        // --------------capturamos variables
-        // capturamos la direccion, el municipio y la referencia del formulario
-        let id_municipio=$('#municipio').val();
-        // capturamos la contraseña del formulario
-        let direccion=$('#direccion').val();
-        let referencia=$('#referencia').val();
-        // console.log(user + ' ' + pass);
-        // mando la información al controlador
-        $.post('../controllers/UsuarioMunicipioController.php', {funcion, id_municipio, direccion, referencia},
-        /*La respuesta se almacena en response*/(response)=>{
-            if (response == 'success') {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Se ah registrado su nueva dirección',
-                    showConfirmButton: false,
-                    timer: 1500
-                  }).then(function(){
-                    $('#form-direccion').trigger('reset');
-                    $('#departamento').val('').trigger('change');
-                    mostrar_card_direcciones();
-                    mostrar_historial();
-                  })
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Hubo algún error, registrando su nueva dirección!!',
-                    text: 'Por favor verifique su conexión'
-                  })
-            }
-        })
-
-        // prevenimos valores por defecto
-        e.preventDefault();
-    })
-
-
-    $(document).on('click', '.eliminar_direccion', (e)=>{
-        let elemento = $(this)[0].activeElement;
-        let id=$(elemento).attr('dir_id');
-        console.log(id);
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-              confirmButton: 'btn btn-success m-3',
-              cancelButton: 'btn btn-danger m-3'
-            },
-            buttonsStyling: false
-          })
-          
-          swalWithBootstrapButtons.fire({
-            title: 'Desea borrar esta dirección?',
-            text: "la dirección dejará de existir!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Si, Eliminar!',
-            cancelButtonText: 'No, Cancelar!',
-            reverseButtons: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-                //nos comunicamos con nuestro controlador
-                funcion="eliminar_direccion";
-                $.post('../controllers/UsuarioMunicipioController.php',
-                   { funcion, id }/* solo enviamos al controlador una funcion para indicarle al controlador
-                   que slo ejecute esa funcion*/,
-                   (response)=>{
-                        console.log(response);
-                        if(response=="success"){
-                            swalWithBootstrapButtons.fire(
-                                    'Eliminado!',
-                                    'Dirección eliminada.',
-                                    'success'
-                                  )
-                                  mostrar_card_direcciones();//hace una recarga en la funcion de mostrar direcciones
-                                  mostrar_historial();//recargamos el historial
-                        }else if(response=="error"){
-                            swalWithBootstrapButtons.fire(
-                                'No se Borró',
-                                'Hubo alteraciones en la integridad de los datos.',
-                                'error'
-                              )
-                        }else{
-                            swalWithBootstrapButtons.fire(
-                                'No se Borró',
-                                'Hubo algún error en el servidor.',
-                                'error'
-                              )
-                        }
-                   })
-            } else if (
-              /* Read more about handling dismissals below */
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
-              swalWithBootstrapButtons.fire(
-                'Cancelado',
-                'La dirección todavía existe.',
-                'error'
-              )
-            }
-          })
-    })
+    
 
     /**El siguiente codigo tiene que ver con editar los datos del usuario */
 
@@ -921,7 +819,7 @@ $(document).ready(function(){
             // console.log(response);
             try {
                 let historiales=JSON.parse(response);
-                console.log(historiales);
+                // console.log(historiales);
                 let template='';
                 historiales.forEach(historial=>{
                     // console.log(historial);
@@ -1034,22 +932,181 @@ $(document).ready(function(){
         }
     }
     //detectamos el municipio dependiendo del departamento
-    $('#departamento').change(function(){
+    $('#departamento').change(async function(){
         let id_departamento=$('#departamento').val();//obtenemos el id del departamento seleccionado
+        if (id_departamento==null) {
+            id_departamento='';
+        }
         funcion="llenar_municipios";
-        $.post('../controllers/MunicipiosController.php', { funcion, id_departamento }, (response) => {
-            //la encriptacion la desencriptamos
-            let municipios=JSON.parse(response);
-            let template='';//aquí se almacenará todo nuestro codigo html
-            // hacemos un foreach para recorrer todos los departamentos
-            municipios.forEach(municipio/* es el elemento que hará el recorrido */ => {
-                template+=`
-                <option value="${municipio.id_municipio}">${municipio.municipio}</option>
-                `;
-            });
-            $('#municipio').html(template);
-            $('#municipio').val('').trigger('change');
+        let data = await fetch('../controllers/MunicipiosController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion+'&&id_departamento='+id_departamento
         })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                if (response!='error') {
+                    let municipios=JSON.parse(response);
+                    // console.log(municipios);
+                    let template='';
+                    //aquí se almacenará todo nuestro codigo html
+                    // hacemos un foreach para recorrer todos los departamentos
+                    municipios.forEach(municipio/* es el elemento que hará el recorrido */ => {
+                        template+=`
+                        <option value="${municipio.id_municipio}">${municipio.municipio}</option>
+                        `;
+                    });
+                    $('#municipio').html(template);
+                    $('#municipio').val('').trigger('change');
+                } else {
+                    $('#municipio').html('');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cuidado es ilegal!!',
+                        text: 'No intentes vulnerar el sistema!!',
+                        text: 'Recarga la pagina',
+                    })
+                }
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    })
+
+    async function crear_direccion(id_municipio,direccion,referencia) {
+        let data = await fetch('../controllers/UsuarioMunicipioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion+'&&id_municipio='+id_municipio+'&&direccion='+direccion+'&&referencia='+referencia
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let respuesta=JSON.parse(response);
+                // console.log(respuesta);
+                if (respuesta.mensaje == 'success') {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ah registrado su nueva dirección',
+                        showConfirmButton: false,
+                        timer: 1500
+                        }).then(function(){
+                        $('#form-direccion').trigger('reset');
+                        $('#departamento').val('').trigger('change');
+                        mostrar_card_direcciones();
+                        mostrar_historial();
+                        })
+                } else if(respuesta.mensaje=='error'){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Eso es ilegal!!',
+                        text: 'No intente vulnerar el sistema'
+                        })
+                }
+
+                //Evitamos con preven prevenir valores por defecto
+                e.preventDefault();
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    }
+
+    $('#form-direccion').submit(async e=>{
+        funcion='crear_direccion';
+        // --------------capturamos variables
+        // capturamos la direccion, el municipio y la referencia del formulario
+        let id_municipio=$('#municipio').val();
+        // capturamos la contraseña del formulario
+        let direccion=$('#direccion').val();
+        let referencia=$('#referencia').val();
+        // console.log(user + ' ' + pass);
+        // mando la información al controlador
+        crear_direccion(id_municipio,direccion,referencia);
+        
+        // prevenimos valores por defecto
+        e.preventDefault();
+    })
+
+    $(document).on('click', '.eliminar_direccion', (e)=>{
+        let elemento = $(this)[0].activeElement;
+        let id=$(elemento).attr('dir_id');
+        console.log(id);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+              confirmButton: 'btn btn-success m-3',
+              cancelButton: 'btn btn-danger m-3'
+            },
+            buttonsStyling: false
+          })
+          
+          swalWithBootstrapButtons.fire({
+            title: 'Desea borrar esta dirección?',
+            text: "la dirección dejará de existir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, Eliminar!',
+            cancelButtonText: 'No, Cancelar!',
+            reverseButtons: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+                //nos comunicamos con nuestro controlador
+                funcion="eliminar_direccion";
+                $.post('../controllers/UsuarioMunicipioController.php',
+                   { funcion, id }/* solo enviamos al controlador una funcion para indicarle al controlador
+                   que slo ejecute esa funcion*/,
+                   (response)=>{
+                        console.log(response);
+                        if(response=="success"){
+                            swalWithBootstrapButtons.fire(
+                                    'Eliminado!',
+                                    'Dirección eliminada.',
+                                    'success'
+                                  )
+                                  mostrar_card_direcciones();//hace una recarga en la funcion de mostrar direcciones
+                                  mostrar_historial();//recargamos el historial
+                        }else if(response=="error"){
+                            swalWithBootstrapButtons.fire(
+                                'No se Borró',
+                                'Hubo alteraciones en la integridad de los datos.',
+                                'error'
+                              )
+                        }else{
+                            swalWithBootstrapButtons.fire(
+                                'No se Borró',
+                                'Hubo algún error en el servidor.',
+                                'error'
+                              )
+                        }
+                   })
+            } else if (
+              /* Read more about handling dismissals below */
+              result.dismiss === Swal.DismissReason.cancel
+            ) {
+              swalWithBootstrapButtons.fire(
+                'Cancelado',
+                'La dirección todavía existe.',
+                'error'
+              )
+            }
+          })
     })
 });
 

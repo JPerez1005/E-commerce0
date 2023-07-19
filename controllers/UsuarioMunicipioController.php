@@ -8,15 +8,26 @@ session_start();
 
 if($_POST['funcion']=='crear_direccion'){
     $id_usuario = $_SESSION['id'];//detecta el id en el usuario que está
-    $id_municipio=$_POST['id_municipio'];//recibimos la variable creada anteriormente de la funcion llenar_municipos
+    $formateado=str_replace(" ","+",$_POST['id_municipio']);
+    $id_municipio=openssl_decrypt($formateado,CODE,KEY);//recibimos la variable creada anteriormente de la funcion llenar_municipos
     //de mi_perfil.js
     $direccion=$_POST['direccion'];
     $referencia=$_POST['referencia'];
-    $usuario_municipio->crear_direccion($id_usuario, $id_municipio, $direccion, $referencia);
-    $descripcion='Ha creado una nueva dirección: '.$direccion;
-    // $descripcion+='Con referencia: '.$referencia;
-    $historial->crear_historial($descripcion,2/*crear*/,1/*mi perfil*/,$id_usuario);
-    echo 'success';
+    $mensaje='';
+    if (is_numeric($id_municipio)) {
+        $usuario_municipio->crear_direccion($id_usuario, $id_municipio, $direccion, $referencia);
+        $descripcion='Ha creado una nueva dirección: '.$direccion;
+        // $descripcion+='Con referencia: '.$referencia;
+        $historial->crear_historial($descripcion,2/*crear*/,1/*mi perfil*/,$id_usuario);
+        $mensaje= 'success';
+    } else {
+        $mensaje= 'error';
+    }
+    $json=array(
+        'mensaje'=>$mensaje
+    );
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }
 
 
