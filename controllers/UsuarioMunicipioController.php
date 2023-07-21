@@ -30,7 +30,6 @@ if($_POST['funcion']=='crear_direccion'){
     echo $jsonstring;
 }
 
-
 if($_POST['funcion']=='mostrar_direcciones'){
     $id_usuario=$_SESSION['id'];
     $usuario_municipio->mostrar_direcciones($id_usuario);
@@ -48,9 +47,11 @@ if($_POST['funcion']=='mostrar_direcciones'){
     echo $jsonstring;
 }
 
-
 if($_POST['funcion']=='eliminar_direccion'){
-    $id_direccion= openssl_decrypt($_POST['id'],CODE,KEY);//aquí estamos desencriptando
+    $formateado=str_replace(" ","+",$_POST['id']);//recibimos el post id
+    $id_direccion=openssl_decrypt($formateado,CODE,KEY);//recibimos la variable creada anteriormente de la funcion llenar_municipos
+    //de mi_perfil.js
+    $mensaje='';
     if(is_numeric($id_direccion)){
         $usuario_municipio->recuperar_direccion($id_direccion);
         // var_dump($usuario_municipio);
@@ -58,10 +59,13 @@ if($_POST['funcion']=='eliminar_direccion'){
         $usuario_municipio->eliminar_direccion($id_direccion);//justo aquí eliminamos la dirección
         $descripcion='Ha eliminado la dirección: '.$direccion_borrada;
         $historial->crear_historial($descripcion,3,1,$_SESSION['id']);
-        echo 'success';
+        $mensaje= 'success';
     }else{
-        echo 'error';
-    }
-    
+        $mensaje= 'error';
+    }$json=array(
+        'mensaje'=>$mensaje
+    );
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }
 

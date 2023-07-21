@@ -96,6 +96,7 @@ if($_POST['funcion']=='editar_datos'){
     $telefono = $_POST['telefono_mod'];
     $avatar = $_FILES['avatar_mod']['name'];
     $usuario->obtener_datos($id_usuario);
+    $mensaje='';
     $datos_cambiados='ha hecho los siguientes cambios: ';
     // var_dump($usuario);
     if ($nombres!=$usuario->objetos[0]->nombres||$apellidos!=$usuario->objetos[0]->apellidos||$dni!=$usuario->objetos[0]->dni||$email!=$usuario->objetos[0]->email||$telefono!=$usuario->objetos[0]->telefono||$avatar!='') {
@@ -135,12 +136,15 @@ if($_POST['funcion']=='editar_datos'){
         $usuario->editar_datos($id_usuario,$nombres,$apellidos,$dni,$email,$telefono,$nombre);
         $descripcion='Ha editado sus datos personales, '.$datos_cambiados;
         $historial->crear_historial($descripcion,1,1,$id_usuario);
-        echo 'success';
+        $mensaje= 'success';
     } else {
-        echo 'danger';
+        $mensaje= 'danger';
     }
-    
-    
+    $json=array(
+        'mensaje'=>  $mensaje
+    );
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }
 
 if($_POST['funcion']=='cambiar_contra'){
@@ -150,6 +154,7 @@ if($_POST['funcion']=='cambiar_contra'){
     $pass_new = $_POST['pass_new'];
 
     $usuario->verificar_usuario($user);
+    $mensaje='';
     // var_dump($usuario);
     if (!empty/*si está vacio*/
     ($usuario->objetos)) {
@@ -159,12 +164,16 @@ if($_POST['funcion']=='cambiar_contra'){
             $usuario->cambiar_contra($id_usuario, $pass_new_encriptada);//mandamos la información al modelo
             $descripcion='Ha cambiado su contraseña';
             $historial->crear_historial($descripcion,1,1,$id_usuario);
-            echo 'success';
+            $mensaje='success';
         }else {
-            echo 'error';
+            $mensaje='error';
         }
     }else {
-        echo 'error';
+        $mensaje= 'error';
     }
+    $json=array(
+        'mensaje'=>$mensaje
+    );
+    echo $jsonstring;
     // echo 'success';
 }

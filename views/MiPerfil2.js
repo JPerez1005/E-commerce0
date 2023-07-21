@@ -119,6 +119,7 @@ $(document).ready(function(){
               })
         }
     }
+
     async function read_favoritos(){
         funcion="read_favoritos";
         let data = await fetch('../controllers/FavoritoController.php',{
@@ -326,6 +327,7 @@ $(document).ready(function(){
         $('#menu_superior').html(template);
 
     }
+
     function mostrar_sidebar(usuario){
         let template=``;
         if (usuario===undefined||usuario==''||usuario==null) {
@@ -567,23 +569,90 @@ $(document).ready(function(){
         }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
 
-    
-
     /**El siguiente codigo tiene que ver con editar los datos del usuario */
 
-    $(document).on('click', '.editar_datos', (e) => {
+    $(document).on('click', '.editar_datos',async (e) => {
         funcion = "obtener_datos";
-        $.post('../controllers/UsuarioController.php', { funcion }, (response)=>{
-            // console.log(response);
-            let usuario=JSON.parse(response);
-            $('#nombres_mod').val(usuario.nombres);
-            $('#apellidos_mod').val(usuario.apellidos);
-            $('#dni_mod').val(usuario.dni);
-            $('#email_mod').val(usuario.email);
-            $('#telefono_mod').val(usuario.telefono);
+        let data = await fetch('../controllers/UsuarioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
         })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let usuario=JSON.parse(response);
+                // console.log(usuario);
+                $('#nombres_mod').val(usuario.nombres);
+                $('#apellidos_mod').val(usuario.apellidos);
+                $('#dni_mod').val(usuario.dni);
+                $('#email_mod').val(usuario.email);
+                $('#telefono_mod').val(usuario.telefono);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hubo algún error!!',
+                    text: 'Comuniquese con el area de sistemas ',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
     })
 
+    async function editar_datos(datos){
+        let data = await fetch('../controllers/UsuarioController.php',{
+            method:'POST',
+            body:datos
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let respuesta=JSON.parse(response);
+                // console.log(respuesta);
+                if (respuesta.mensaje=="success") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se han editado sus cambios',
+                        showConfirmButton: false,
+                        timer: 1500
+                      }).then(function(){
+                        verificar_sesion();
+                        mostrar_card_usuario();
+                        mostrar_historial();
+                      })
+                }
+                else if(respuesta.mensaje=="danger"){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No hubo ningún cambio!!',
+                        text: 'no modificó ningún cambio'
+                      })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hubo algún error!!',
+                    text: 'Comuniquese con el area de sistemas ',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    }
     // el siguiente evento se ejecuta cuando las validaciones ya están correctas
     // tambien caundo el boton submit del formulario sea presionado
     $.validator.setDefaults({
@@ -592,48 +661,9 @@ $(document).ready(function(){
             //metodo ajax en vez del post
             let datos=new FormData($('#form-datos')[0]);//aquí capturamos todos los datos
             datos.append("funcion", funcion);
-            $.ajax({
-                type: "POST",
-                url: '../controllers/UsuarioController.php',
-                data: datos,
-                cache: false,
-                processData: false,
-                contentType: false,
-                /**cache processData y contentType nos permite para poder enviar img y files */
-                success: function(response){
-                    console.log(response);
-                    if (response=="success") {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Se han editado sus cambios',
-                            showConfirmButton: false,
-                            timer: 1500
-                          }).then(function(){
-                            verificar_sesion();
-                            mostrar_card_usuario();
-                            mostrar_historial();
-                          })
-                    }
-                    else if(response=="danger"){
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'No hubo ningún cambio!!',
-                            text: 'no modificó ningún cambio'
-                          })
-                    } 
-                    else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Hubo algún error, editando sus datos!!',
-                            text: 'Por favor verifique su conexión'
-                          })
-                    }
-                }
-            })
+            editar_datos(datos);
         }
     });
-      
 
     jQuery.validator.addMethod("letras",
       function (value, element) {
@@ -641,7 +671,7 @@ $(document).ready(function(){
         return /^[A-Za-z]+$/.test(variable);
       },
     "Este campo solo permite letras y ya");
-  
+
     $('#form-datos').validate({//este tipo de reglas vienen por defecto
     rules: {
         nombres_mod: {
@@ -708,45 +738,68 @@ $(document).ready(function(){
     }
     });
 
-  /**CAMBIO DE CONTRASEÑA------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+    /**CAMBIO DE CONTRASEÑA------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  $.validator.setDefaults({
-    submitHandler: function () {//cuando se valida todo entonces......
-        // alert('Se validó todo.')
-        funcion = "cambiar_contra";
-        let pass_old=$('#pass_old').val();
-        let pass_new=$('#pass_new').val();
-        $.post('../controllers/UsuarioController.php', { funcion, pass_old, pass_new }, (response)=>{
-            if (response=="success") {
-                        
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Se ha cambiado la contraseña.',
-                    showConfirmButton: false,
-                    timer: 1500
-                  }).then(function(){
-                    $('#form-contra').trigger('reset');
-                    verificar_sesion();
-                    mostrar_card_usuario();
-                    mostrar_historial();
-                  })
-            } else if(response=="error"){
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Contraseña incorrecta!!',
-                    text: 'Por favor verifique la contraseña digitada.'
-                  })
-            }else {
+    async function cambiar_contra(funcion,pass_old,pass_new){
+        let data = await fetch('../controllers/UsuarioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion+'&&pass_old='+pass_old+'&&pass_new='+pass_new
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                let respuesta=JSON.parse(response);
+                console.log(respuesta);
+                if (respuesta.mensaje=="success") {
+                            
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha cambiado la contraseña.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function(){
+                        $('#form-contra').trigger('reset');
+                        verificar_sesion();
+                        mostrar_card_usuario();
+                        mostrar_historial();
+                    })
+                } else if(respuesta.mensaje=="error"){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Contraseña incorrecta!!',
+                        text: 'Por favor verifique la contraseña digitada.'
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Hubo algún error, cambiando la contraseña!!',
-                    text: 'Por favor verifique su conexión.'
-                  })
+                    title: 'Hubo algún error!!',
+                    text: 'Comuniquese con el area de sistemas ',
+                })
             }
-        })
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
     }
-  });
+
+
+    $.validator.setDefaults({
+        submitHandler: function () {//cuando se valida todo entonces......
+            // alert('Se validó todo.')
+            funcion = "cambiar_contra";
+            let pass_old=$('#pass_old').val();
+            let pass_new=$('#pass_new').val();
+            cambiar_contra(funcion,pass_old,pass_new);
+        }
+    });
 
     // podemos crear reglas en las validaciones
 
@@ -758,53 +811,53 @@ $(document).ready(function(){
     "Este campo solo permite letras");
 
     //hacemos las validaciones
-  $('#form-contra').validate({//este tipo de reglas vienen por defecto
-    rules: {
-        pass_old: {
-            required: true,
-            minlength: 5,
-            maxlength: 20
+    $('#form-contra').validate({//este tipo de reglas vienen por defecto
+        rules: {
+            pass_old: {
+                required: true,
+                minlength: 5,
+                maxlength: 20
+            },
+            pass_new: {
+                required: true,
+                minlength: 5,
+                maxlength: 20
+            },
+            pass_confirm: {
+                required: true,
+                equalTo: "#pass_new"
+            }
         },
-        pass_new: {
-            required: true,
-            minlength: 5,
-            maxlength: 20
+        messages: {
+            pass_old:{
+                required: "*Este campo es obligatorio",
+                minlength: "*El password debe ser de minimo 5 caracteres",
+                maxlength: "*El password debe ser de maximo 20 caracteres"
+            },
+            pass_new:{
+                required: "*Este campo es obligatorio",
+                minlength: "*El password debe ser de minimo 5 caracteres",
+                maxlength: "*El password debe ser de maximo 20 caracteres"
+            },
+            pass_confirm:{
+                required: "*Este campo es obligatorio",
+                equalTo: "*el campo de la nueva contraseña no coincide"
+            }
         },
-        pass_confirm: {
-            required: true,
-            equalTo: "#pass_new"
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+        error.addClass('invalid-feedback');
+        element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+            $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            $(element).addClass('is-valid');
         }
-    },
-    messages: {
-        pass_old:{
-            required: "*Este campo es obligatorio",
-            minlength: "*El password debe ser de minimo 5 caracteres",
-            maxlength: "*El password debe ser de maximo 20 caracteres"
-        },
-        pass_new:{
-            required: "*Este campo es obligatorio",
-            minlength: "*El password debe ser de minimo 5 caracteres",
-            maxlength: "*El password debe ser de maximo 20 caracteres"
-        },
-        pass_confirm:{
-            required: "*Este campo es obligatorio",
-            equalTo: "*el campo de la nueva contraseña no coincide"
-        }
-    },
-    errorElement: 'span',
-    errorPlacement: function (error, element) {
-      error.addClass('invalid-feedback');
-      element.closest('.form-group').append(error);
-    },
-    highlight: function (element, errorClass, validClass) {
-        $(element).addClass('is-invalid');
-        $(element).removeClass('is-valid');
-    },
-    unhighlight: function (element, errorClass, validClass) {
-        $(element).removeClass('is-invalid');
-        $(element).addClass('is-valid');
-    }
-  });
+    });
 
   /**Mostrar el historial-------------------------------------------------------------------------------------------------------------------------- */
     async function mostrar_historial(){
@@ -870,30 +923,30 @@ $(document).ready(function(){
         }
     }
 
-  function Loader(mensaje){
-    if (mensaje==''||mensaje==null) {
-        mensaje='Cargando datos...';
-    }
-    Swal.fire({
-        position: 'center',
-        html: '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #409c8c;"></i>',
-        title: mensaje,
-        showConfirmButton:false
-    })
-  }
-
-  function CloseLoader(mensaje,tipo){
-    if (mensaje==''||mensaje==null) {
-        Swal.close();
-    } else {
+    function Loader(mensaje){
+        if (mensaje==''||mensaje==null) {
+            mensaje='Cargando datos...';
+        }
         Swal.fire({
             position: 'center',
-            icon: tipo,
+            html: '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #409c8c;"></i>',
             title: mensaje,
             showConfirmButton:false
         })
     }
-  }
+
+    function CloseLoader(mensaje,tipo){
+        if (mensaje==''||mensaje==null) {
+            Swal.close();
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: tipo,
+                title: mensaje,
+                showConfirmButton:false
+            })
+        }
+    }
 
   /**Mostrar Lugares en verificacion de usuario----------------------------------------------------------------------------------------------------------------- */
     //funcion de llenado, para llenar las opciones del formulario del acordion
@@ -1029,7 +1082,7 @@ $(document).ready(function(){
         }
     }
 
-    $('#form-direccion').submit(async e=>{
+    $('#form-direccion').submit(e=>{
         funcion='crear_direccion';
         // --------------capturamos variables
         // capturamos la direccion, el municipio y la referencia del formulario
@@ -1044,6 +1097,39 @@ $(document).ready(function(){
         // prevenimos valores por defecto
         e.preventDefault();
     })
+
+    async function eliminar_direccion(id) {
+        funcion="eliminar_direccion";
+        let respuesta='';
+        let data = await fetch('../controllers/UsuarioMunicipioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion+'&&id='+id
+        })
+        if (data.ok) {
+            let response = await data.text();
+            try {
+                respuesta=JSON.parse(response);
+                console.log(respuesta);
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hubo algún error!!',
+                    text: 'Comuniquese con el area de sistemas ',
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.statusText,
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+        return respuesta;
+    }
 
     $(document).on('click', '.eliminar_direccion', (e)=>{
         let elemento = $(this)[0].activeElement;
@@ -1068,34 +1154,23 @@ $(document).ready(function(){
           }).then((result) => {
             if (result.isConfirmed) {
                 //nos comunicamos con nuestro controlador
-                funcion="eliminar_direccion";
-                $.post('../controllers/UsuarioMunicipioController.php',
-                   { funcion, id }/* solo enviamos al controlador una funcion para indicarle al controlador
-                   que slo ejecute esa funcion*/,
-                   (response)=>{
-                        console.log(response);
-                        if(response=="success"){
-                            swalWithBootstrapButtons.fire(
-                                    'Eliminado!',
-                                    'Dirección eliminada.',
-                                    'success'
-                                  )
-                                  mostrar_card_direcciones();//hace una recarga en la funcion de mostrar direcciones
-                                  mostrar_historial();//recargamos el historial
-                        }else if(response=="error"){
-                            swalWithBootstrapButtons.fire(
-                                'No se Borró',
-                                'Hubo alteraciones en la integridad de los datos.',
-                                'error'
+                eliminar_direccion(id).then(respuesta=>{
+                    if(respuesta.mensaje=="success"){
+                        swalWithBootstrapButtons.fire(
+                                'Eliminado!',
+                                'Dirección eliminada.',
+                                'success'
                               )
-                        }else{
-                            swalWithBootstrapButtons.fire(
-                                'No se Borró',
-                                'Hubo algún error en el servidor.',
-                                'error'
-                              )
-                        }
-                   })
+                              mostrar_card_direcciones();//hace una recarga en la funcion de mostrar direcciones
+                              mostrar_historial();//recargamos el historial
+                    }else if(respuesta.mensaje=="error"){
+                        swalWithBootstrapButtons.fire(
+                            'No se Borró',
+                            'Hubo alteraciones en la integridad de los datos.',
+                            'error'
+                          )
+                    }
+                });
             } else if (
               /* Read more about handling dismissals below */
               result.dismiss === Swal.DismissReason.cancel
