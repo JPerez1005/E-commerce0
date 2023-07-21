@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login | E-commerce</title>
 
+  <!-- usamos los sweet alert, o las alertas personalizadas -->
+  <link rel="stylesheet" href="../util/css/sweetalert2.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -71,9 +73,11 @@
 <script src="../util/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../util/js/adminlte.min.js"></script>
-<!-- script del login -->
-<script src="login.js"></script>
 <!-- diseño de los alert -->
 <script src="../util/js/toastr.min.js"></script>
+<!-- funcionamiento del sweetalert2.min.js -->
+<script src="../util/js/sweetalert2.min.js"></script>
+<!-- script del login -->
+<script src="Login1.js"></script>
 </body>
 </html>

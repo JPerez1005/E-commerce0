@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    var datatable;
+    // var datatable;
     toastr.options={
         'debug': false,
         'positionClass': 'toast-bottom-right',
@@ -11,10 +11,12 @@ $(document).ready(function(){
         'extendedTimeOut':1000
     }
 
+    Loader();
+    // setTimeout(verificar_sesion,2000);
     verificar_sesion();
     $('#active_nav_notificaciones').addClass('active bg-black');
 
-    async function read_notificaciones(id_usuario){
+    async function read_notificaciones(){
         funcion="read_notificaciones";
         let data = await fetch('../controllers/NotificacionController.php',{
             method:'POST',
@@ -23,31 +25,40 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
+            // console.log(response);
             try {
                 let notificaciones = JSON.parse(response);
-                console.log(notificaciones);
+                // console.log(notificaciones);
                 let template1='';
                 let template2='';
+                let template=`
+                    <a  class="nav-link" data-toggle="dropdown" href="#">`;
+                
                 if (notificaciones.length==0) {
-                    template1+=`
+                    template+=`
                         <i class="fa-solid fa-bell" style="color: #ffdd00;"></i>
                     `;
-                    template2+=`
+                    template1+=`
                         Notificaciones
                     `;
                 } else {
-                    template1+=`
-                        <i class="fa-solid fa-bell fa-shake" style="color: #ffdd00;"></i>
+                    template+=`
+                        <i class="fa-solid fa-bell fa-bounce" style="color: #ffdd00;"></i>
                         <span class="badge badge-warning navbar-badge">${notificaciones.length}</span>
                     `;
-                    template2+=`
+                    template1+=`
                         Notificaciones<span class="badge badge-warning right">${notificaciones.length}</span>
                     `;
                 }
-                $('#numero_notificacion').html(template1);
-                $('#nav_cont_noti').html(template2);
-                let template='';
+
+                template+=`
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                        
+                    
+
+                `;
+                $('#nav_cont_noti').html(template1);
                 if (notificaciones.length==1) {
                     template+=`
                         <span class="dropdown-item dropdown-header">${notificaciones.length} Notificacion</span>
@@ -78,8 +89,9 @@ $(document).ready(function(){
                 })
                 template+=`
                     <a href="../views/notificaciones.php" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                    </div>
                 `;
-                $('#notificaciones').html(template);
+                $('#notificacion').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -102,34 +114,38 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
+            // console.log(response);
             try {
                 let favoritos = JSON.parse(response);
-                console.log(favoritos);
+                // console.log(favoritos);
                 let template1='';
-                let template2='';
+                let template=`
+                    <a class="nav-link" data-toggle="dropdown" href="#">`;
                 if (favoritos.length==0) {
-                    template1+=`
+                    template+=`
                         <i class="fa-solid fa-heart" style="color: #d10000;"></i>
                     `;
-                    template2+=`
+                    template1+=`
                         Favoritos
                     `;
                 } else {
-                    template1+=`
+                    template+=`
                         <i class="fa-solid fa-heart fa-beat" style="color: #d10000;"></i>
                         <span class="badge badge-warning navbar-badge">${favoritos.length}</span>
                     `;
-                    template2+=`
+                    template1+=`
                         Favoritos<span class="badge badge-warning right">${favoritos.length}</span>
                     `;
                 }
-                $('#numero_favorito').html(template1);
-                $('#nav_cont_fav').html(template2);
-                let template='';
-                if (notificaciones.length==1) {
+                template+=`
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right">
+                    
+                `;
+                
+                if (favoritos.length==1) {
                     template+=`
-                        <span class="dropdown-item dropdown-header">${favoritos.length} Favoritos</span>
+                        <span class="dropdown-item dropdown-header">${favoritos.length} Favorito</span>
                     `;
                 } else {
                     template+=`
@@ -155,9 +171,11 @@ $(document).ready(function(){
                     `;
                 })
                 template+=`
-                    <a href="../views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus productos favoritos</a>
+                        <a href="../views/favoritos.php" class="dropdown-item dropdown-footer">Ver todos tus productos favoritos</a>
+                    </div>
                 `;
-                $('#favoritos').html(template);
+                $('#nav_cont_fav').html(template1);
+                $('#favorito').html(template);
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -171,37 +189,199 @@ $(document).ready(function(){
         }
     }
 
-    function verificar_sesion() {
-        funcion = 'verificar_sesion';
-        $.post('../controllers/UsuarioController.php', { funcion }, (response)=> {
-            console.log(response);
-            if (response !='') {//si estamos logueados entonces....
-                let sesion=JSON.parse(response);
-                $('#nav_login').hide();
-                $('#nav_register').hide();
-                $('#usuario_nav').text(sesion.user+ ' #' + sesion.id);
-                $('#avatar_nav').attr('src','../util/img/users/' + sesion.avatar);
-                $('#avatar_menu').attr('src','../util/img/users/' + sesion.avatar);
-                $('#usuario_menu').text(sesion.user);
-                read_notificaciones();//trae las notificaciones dependiendo del usuario
-                read_all_notificaciones();
-                $('#notificacion').show();
-                $('#nav_notificaciones').show();
-                read_favoritos();//
-                $('#favorito').show();
-                $('#nav_favoritos').show();
-            }else{
-                $('#nav_usuario').hide();
-                $('#notificacion').hide();
-                $('#nav_notificaciones').hide();
-                $('#favorito').hide();
-                $('#nav_favoritos').hide();
-                location.href='login.php';
-            }
+    function mostrar_navegacion(usuario){
+        let template=``;
+        if (usuario===undefined||usuario==''||usuario==null) {
+            template=`
+            <li class="nav-item">
+                <a class="nav-link"  href="../views/register.php" role="button">
+                    <i class="fas fa-user-plus"></i>Registrarse
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  href="../views/login.php" role="button">
+                    <i class="far fa-user"></i>Login
+                </a>
+            </li>
+            `;
+        } else {
+            template=`
+                <!-- Navbar Search -->
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <div class="navbar-search-block">
+                        <form class="form-inline">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                            <button class="btn btn-navbar" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-navbar" type="button" data-widget="navbar-search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </li>
+        
+                <!-- Messages Dropdown Menu -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge badge-danger navbar-badge">3</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <a href="#" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+                            <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                            <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                Brad Diesel
+                                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">Call me whenever you can...</p>
+                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                            </div>
+                        </div>
+                        <!-- Message End -->
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+                            <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                John Pierce
+                                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">I got your message bro</p>
+                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                            </div>
+                        </div>
+                        <!-- Message End -->
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                        <!-- Message Start -->
+                        <div class="media">
+                            <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
+                            <div class="media-body">
+                            <h3 class="dropdown-item-title">
+                                Nora Silvester
+                                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
+                            </h3>
+                            <p class="text-sm">The subject goes here</p>
+                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                            </div>
+                        </div>
+                        <!-- Message End -->
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+                    </div>
+                </li>
+                <!-- Notifications Dropdown Menu -->
+                <li id="notificacion" class="nav-item dropdown">
+                    
+                </li>
+                <li id="favorito" class="nav-item dropdown">
+                    
+                    
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <!-- la imagen es un circulo y fluid la hace responsive -->
+                    <img src="../util/img/users/${usuario.avatar}" width="30" height="30" class="img-fluid img-circle" alt="">
+                    <span>${usuario.user}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="../views/mi_perfil.php"><i class="fas fa-user-cog"></i>  Mi perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-basket"></i>  Mis pedidos</a></li>
+                    <li><a class="dropdown-item" href="../controllers/logout.php"><i class="fas fa-user-times"></i>  Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+            `;
+        }
+        $('#loader_1').hide(500);
+        $('#menu_superior').html(template);
+
+    }
+
+    function mostrar_sidebar(usuario){
+        let template=``;
+        if (usuario===undefined||usuario==''||usuario==null) {
+        } else {
+            template=`
+                <li class="nav-header">Perfil</li>
+                <li id="nav_notificaciones" class="nav-item">
+                  <a id="active_nav_notificaciones" href="../views/notificaciones.php" class="nav-link">
+                    <i class="fa-regular fa-bell" style="color: #ffdd00;"></i>
+                    <p id="nav_cont_noti">
+                      Notificaciones
+                    </p>
+                  </a>
+                </li>
+                <li id="nav_favoritos" class="nav-item">
+                  <a id="active_nav_favoritos" href="../views/favoritos.php" class="nav-link">
+                  <i class="fa-regular fa-heart" style="color: #d10000;"></i>
+                    <p id="nav_cont_fav">
+                      Favoritos
+                    </p>
+                  </a>
+                </li>
+            `;
+        }
+        $('#loader_2').hide(500);
+        $('#menu_lateral').html(template);
+
+    }
+
+    async function verificar_sesion() {
+        funcion="verificar_sesion";
+        let data = await fetch('../controllers/UsuarioController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
         })
+        if (data.ok) {
+
+            let response = await data.text();
+            try {
+                // console.log(productos);
+                if (response !='') {//si estamos logueados entonces....
+                    let sesion=JSON.parse(response);
+                    mostrar_navegacion(sesion);
+                    mostrar_sidebar(sesion);
+                    $('#avatar_menu').attr('src','../util/img/users/' + sesion.avatar);
+                    $('#usuario_menu').text(sesion.user);
+                    read_notificaciones();//trae las notificaciones dependiendo del usuario
+                    read_favoritos();//
+                    read_all_notificaciones();
+                    CloseLoader();
+                }else{
+                    location.href='login.php';
+                }
+                
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+              })
+        }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
 
-    async function read_all_notificaciones(id_usuario){
+    async function read_all_notificaciones(){
         funcion="read_all_notificaciones";
         let data = await fetch('../controllers/NotificacionController.php',{
             method:'POST',
@@ -321,6 +501,31 @@ $(document).ready(function(){
         let id = $(elemento).attr('attrid');
         eliminar_notificacion(id);
     })
+
+    function Loader(mensaje){
+        if (mensaje==''||mensaje==null) {
+            mensaje='Cargando datos...';
+        }
+        Swal.fire({
+            position: 'center',
+            html: '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #409c8c;"></i>',
+            title: mensaje,
+            showConfirmButton:false
+        })
+    }
+
+    function CloseLoader(mensaje,tipo){
+        if (mensaje==''||mensaje==null) {
+            Swal.close();
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: tipo,
+                title: mensaje,
+                showConfirmButton:false
+            })
+        }
+    }
 
 });
 

@@ -9,6 +9,7 @@ if($_POST['funcion']=='login'){
     $user = $_POST['user'];
     $pass = $_POST['pass'];
     $usuario->verificar_usuario($user);
+    $mensaje='';
     // var_dump($usuario);
     // echo openssl_decrypt( $usuario->objetos[0]->pass,CODE,KEY);//VER CONTRASEÑA DESENCRIPTADA
     if ($usuario->objetos!=null) {
@@ -19,9 +20,19 @@ if($_POST['funcion']=='login'){
             $_SESSION['user']=$usuario->objetos[0]->user;
             $_SESSION['tipo_usuario']=$usuario->objetos[0]->id_tipo;
             $_SESSION['avatar']=$usuario->objetos[0]->avatar;
-            echo 'usuario logueado';
+            $mensaje= 'usuario logueado';
         }
+        else{
+            $mensaje='error';
+        }
+    }else {
+        $mensaje='error';
     }
+    $json=array(
+        'mensaje'=>$mensaje,
+    );
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }//me indica si el usuario que se digito tiene datos ya registrados
 //solo se puede ingresar con datos ya registrados
 
@@ -58,9 +69,13 @@ if($_POST['funcion']=='registrar_usuario'){
     $dni = $_POST['dni'];
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
-
     $usuario->registrar_usuario($username,$pass,$nombres,$apellidos,$dni,$email,$telefono);
-    echo 'success';
+    $mensaje='success';
+    $json=array(
+        'mensaje'=>$mensaje
+    );
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }
 
 

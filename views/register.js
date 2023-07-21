@@ -1,31 +1,53 @@
 $(document).ready(function(){
-    
-    var funcion;
+  var funcion;
 
-    verificar_sesion();
+  Loader();
+  verificar_sesion();
+  // setTimeout(verificar_sesion,2000);
 
-    function verificar_sesion() {
-        funcion = 'verificar_sesion';
-        $.post('../controllers/UsuarioController.php', { funcion }, (response)=> {
-            if (response !='') {
-                location.href='../index.php';
-            }
-        })
-    }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
+  async function verificar_sesion(){
+      funcion="verificar_sesion";
+      let data = await fetch('../controllers/UsuarioController.php',{
+          method:'POST',
+          headers:{'Content-Type':'application/x-www-form-urlencoded'},
+          body:'funcion='+funcion
+      })
+      if (data.ok) {
 
-  $.validator.setDefaults({
-    submitHandler: function () {
-      let username = $('#username').val();
-      let pass = $('#pass').val();
-      let nombres = $('#nombres').val();
-      let apellidos = $('#apellidos').val();
-      let dni = $('#dni').val();
-      let email = $('#email').val();
-      let telefono = $('#telefono').val();
-      funcion = "registrar_usuario";
-      $.post('../controllers/UsuarioController.php', {username,pass,nombres,apellidos,dni,email,telefono,funcion},(response)=>{
-        response=response.trim();//trim elimina cualquier espacio en la respuesta
-        if(response=="success"){
+          let response = await data.text();
+          try {
+              // console.log(productos);
+              if (response !='') {//si estamos logueados entonces....
+                  location.href='../index.php';
+              }
+              CloseLoader();
+          } catch (error) {
+              console.error(error);
+              console.log(response);
+          }
+      } else {
+          Swal.fire({
+              icon: 'error',
+              title: 'Hubo algún error!!',
+              text: 'Por favor verifique su conexión '+data.status,
+            })
+      }
+  }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
+
+  async function registrarse(username,pass,nombres,apellidos,dni,email,telefono){
+    funcion="registrar_usuario";
+    let data = await fetch('../controllers/UsuarioController.php',{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'funcion='+funcion+'&&username='+username+'&&pass='+pass+'&&nombres='+nombres+'&&apellidos='+apellidos+'&&dni='+dni+'&&email='+email+'&&telefono='+telefono
+    })
+    if (data.ok){
+        let response = await data.text();
+        console.log(response);
+        try {
+          let respuesta=JSON.parse(response);
+          console.log(respuesta);
+          if(respuesta.mensaje=="success"){
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -36,48 +58,70 @@ $(document).ready(function(){
                 $('#form-register').trigger('reset');
                 location.href = '../views/login.php'
               })
-        }else{
+          }
+          CloseLoader();
+        } catch (error) {
+            console.error(error);
+            console.log(respuesta.mensaje);
             Swal.fire({
-                icon: 'error',
-                title: 'Hubo algún error!!',
-                text: 'Por favor verifique su conexión'
-              })
-              
+              icon: 'error',
+              title: 'Hubo algún error!!',
+              text: 'Por favor verifique su conexión'
+            })
         }
-      })
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Hubo algún error!!',
+            text: 'Por favor verifique su conexión '+data.status,
+        })
+    }
+  }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
+
+  $.validator.setDefaults({
+    submitHandler: function(){
+      let username = $('#username').val();
+      let pass = $('#pass').val();
+      let nombres = $('#nombres').val();
+      let apellidos = $('#apellidos').val();
+      let dni = $('#dni').val();
+      let email = $('#email').val();
+      let telefono = $('#telefono').val();
+      Loader('Registrando usuario...');
+      registrarse(username,pass,nombres,apellidos,dni,email,telefono);
     }
   });
 
-// podemos crear reglas en las validaciones
-jQuery.validator.addMethod('usuario_existente',
-    function (value, element) {
-        let funcion="verificar_usuario";
-        let bandera;
-        $.ajax({
-            type: "POST",
-            url: "../controllers/UsuarioController.php",
-            data: 'funcion=' + funcion + '&&value=' + value,
-            async: false,
-            success: function(response){
-                response=response.trim();//trim elimina cualquier espacio en la respuesta
-                if (response=="success") {
-                    bandera=false;
-                } else {
-                    bandera=true;
-                }
-            }
-        })
-        // console.log(bandera);
-        return bandera;
-    },
-    "*Este usuario ya existe");
+  // podemos crear reglas en las validaciones
+  jQuery.validator.addMethod('usuario_existente',
+      function (value, element) {
+          let funcion="verificar_usuario";
+          let bandera;
+          $.ajax({
+              type: "POST",
+              url: "../controllers/UsuarioController.php",
+              data: 'funcion=' + funcion + '&&value=' + value,
+              async: false,
+              success: function(response){
+                  response=response.trim();//trim elimina cualquier espacio en la respuesta
+                  if (response=="success") {
+                      bandera=false;
+                  } else {
+                      bandera=true;
+                  }
+              }
+          })
+          // console.log(bandera);
+          return bandera;
+      },
+      "*Este usuario ya existe");
 
-jQuery.validator.addMethod("letras",
-    function (value, element) {
-      let variable = value.replace(/ /g, "");
-      return /^[A-Za-z]+$/.test(variable);
-    },
-    "Este campo solo permite letras y ya");
+  jQuery.validator.addMethod("letras",
+      function (value, element) {
+        let variable = value.replace(/ /g, "");
+        return /^[A-Za-z]+$/.test(variable);
+      },
+      "Este campo solo permite letras y ya");
 
   $('#form-register').validate({//este tipo de reglas vienen por defecto
     rules: {
@@ -184,4 +228,29 @@ jQuery.validator.addMethod("letras",
         $(element).addClass('is-valid');
     }
   });
+
+  function Loader(mensaje){
+    if (mensaje==''||mensaje==null) {
+        mensaje='Cargando datos...';
+    }
+    Swal.fire({
+        position: 'center',
+        html: '<i class="fa-solid fa-spinner fa-spin-pulse fa-xl" style="color: #409c8c;"></i>',
+        title: mensaje,
+        showConfirmButton:false
+    })
+}
+
+  function CloseLoader(mensaje,tipo){
+      if (mensaje==''||mensaje==null) {
+          Swal.close();
+      } else {
+          Swal.fire({
+              position: 'center',
+              icon: tipo,
+              title: mensaje,
+              showConfirmButton:false
+          })
+      }
+  }
 });

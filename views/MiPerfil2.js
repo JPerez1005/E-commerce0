@@ -1,8 +1,8 @@
 $(document).ready(function(){
     var funcion;
     Loader();
-    setTimeout(verificar_sesion,2000);
-    // verificar_sesion();
+    // setTimeout(verificar_sesion,2000);
+    verificar_sesion();
     
     // mostrar_card_direcciones();
     bsCustomFileInput.init();
