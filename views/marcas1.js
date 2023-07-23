@@ -573,10 +573,10 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            // console.log(response);
+            console.log(response);
             try {
                 let respuesta = JSON.parse(response);
-                if (respuesta.mensaje=="Marca Creada") {
+                if (respuesta.mensaje=="success") {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -584,25 +584,36 @@ $(document).ready(function(){
                         showConfirmButton: false,
                         timer: 1500
                     }).then(function(){
+                        $('#widget_nombre_marca').text(respuesta.nombre_marca);
+                        $('#widget_imagen_marca').attr('src','../util/img/marca/'+respuesta.img);
                         $('#form-marca-mod').trigger('reset');//reseteamos el formulario
                         read_all_marcas();
+                    })
+                }else if(respuesta.mensaje=="danger"){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Error!!',
+                        text: 'No hizo ningún cambio.'
                     })
                 }
             } catch (error) {
                 console.error(error);
                 console.log(response);
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Hubo algún Error!!',
-                    text: 'Por favor Comuniquese con el area de sistemas.'
-                })
+                if (response=='error') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cuidado!!',
+                        text: 'No intente vulnerar el sistema.'
+                    })
+                }
+                
             }
         } else {
             Swal.fire({
                 icon: 'error',
                 title: 'Hubo algún error!!',
                 text: 'Por favor verifique su conexión '+data.status,
-              })
+            })
         }
     }
 

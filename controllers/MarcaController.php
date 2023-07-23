@@ -48,10 +48,48 @@ if($_POST['funcion']=='crear_marca'){
 
 if($_POST['funcion']=='editar_marca'){
     $id_usuario=$_SESSION['id'];
-    $mensaje='Marca Editada';
-    $json=array(
-        'mensaje'=>$mensaje
-    );
-    $jsonstring=json_encode($json);
-    echo $jsonstring;
+    $nombre=$_POST['nom_marc_mod'];
+    $img=$_FILES['img_marc_mod']['name'];
+    $formateado=str_replace(" ","+",$_POST['id_marca_mod']);
+    $id_marca=openssl_decrypt($formateado,CODE,KEY);
+    $mensaje='';
+    $nombre_imagen='';
+    $datos_cambiados='ha hecho los siguientes cambios: ';
+    if (is_numeric($id_marca)) {
+        $marca->obtener_marca($id_marca);
+        // var_dump($marca);
+        if($nombre!=$marca->objetos[0]->nombre || $img!=''){
+            if ($nombre!=$marca->objetos[0]->nombre) {
+                $datos_cambiados.='Una marca cambió su nombre de '.$marca->objetos[0]->nombre.' a '.$nombre.','; 
+            }
+            if ($img!='') {
+                $datos_cambiados.='La imagen de la marca fue cambiada';
+                $nombre_imagen=uniqid().'-'.$img;
+                $ruta='../util/img/marca/'.$nombre_imagen;
+                // el contenido de la img es el archivo temporal q se guarda en el navegador
+                // eso se guarda en la ruta
+                move_uploaded_file($_FILES['img_marc_mod']['tmp_name'],$ruta);
+            }
+            $avatar_actual=$marca->objetos[0]->imagen;
+            if ($avatar_actual!='marca_default.png') {
+                unlink('../util/img/marca/'.$avatar_actual);
+            }
+            $marca->editar($id_marca,$nombre,$nombre_imagen);
+            $descripcion='Has editado una marca: '.$datos_cambiados; 
+            $historial->crear_historial($descripcion,1,6,$id_usuario);
+            $mensaje='success';
+        }else{
+            $mensaje='danger';
+        }
+        $json=array(
+            'mensaje'=>$mensaje,
+            'nombre_marca'=>$nombre,
+            'img'=>$nombre_imagen
+        );
+        $jsonstring=json_encode($json);
+        echo $jsonstring;
+    }else{
+        echo 'error';//vulneracion del sistema
+    }
+    
 }

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-06-2023 a las 16:50:19
--- Versión del servidor: 10.4.24-MariaDB
--- Versión de PHP: 8.1.6
+-- Tiempo de generación: 23-07-2023 a las 06:23:18
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,11 +20,15 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `e-commerce0`
 --
+CREATE DATABASE IF NOT EXISTS `e-commerce0` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `e-commerce0`;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `caracteristica`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `caracteristica` (
@@ -35,7 +39,7 @@ CREATE TABLE `caracteristica` (
   `fecha_edicion` date NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_producto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `caracteristica`
@@ -50,6 +54,8 @@ INSERT INTO `caracteristica` (`id`, `titulo`, `descripcion`, `fecha_creacion`, `
 --
 -- Estructura de tabla para la tabla `categoria`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `categoria` (
   `id` int(11) NOT NULL,
@@ -57,7 +63,7 @@ CREATE TABLE `categoria` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `categoria`
@@ -72,11 +78,13 @@ INSERT INTO `categoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `est
 --
 -- Estructura de tabla para la tabla `departamentos`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `departamentos` (
   `id_departamento` int(2) NOT NULL,
   `departamento` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `departamentos`
@@ -122,6 +130,8 @@ INSERT INTO `departamentos` (`id_departamento`, `departamento`) VALUES
 --
 -- Estructura de tabla para la tabla `favorito`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `favorito` (
   `id` int(11) NOT NULL,
@@ -130,7 +140,7 @@ CREATE TABLE `favorito` (
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_usuario` int(11) NOT NULL,
   `id_producto_tienda` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `favorito`
@@ -138,12 +148,14 @@ CREATE TABLE `favorito` (
 
 INSERT INTO `favorito` (`id`, `url`, `fecha_creacion`, `estado`, `id_usuario`, `id_producto_tienda`) VALUES
 (1, 'views/descripcion.php?name=Whisky Buchanan\'s Deluxe&&id=bB9Rph+GtfM4URyyszp2Gw==', '2023-05-25 23:19:28', 'A', 1, 2),
-(2, 'views/descripcion.php?name=Gaseosa Coca Cola sabor original&&id=oBNdnmI70tGU4vNlwJ7oDg==', '2023-05-26 21:28:15', 'I', 1, 1);
+(2, 'views/descripcion.php?name=Gaseosa Coca Cola sabor original&&id=oBNdnmI70tGU4vNlwJ7oDg==', '2023-05-26 21:28:15', 'A', 1, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `historial`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `historial` (
@@ -153,7 +165,7 @@ CREATE TABLE `historial` (
   `id_tipo_historial` int(11) NOT NULL,
   `id_modulo` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `historial`
@@ -258,12 +270,99 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (96, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-06-02 21:45:28', 3, 5, 1),
 (97, 'Ha respondido una pregunta: aveces. |En el producto: Whisky Buchanan\'s Deluxe', '2023-06-03 16:28:47', 2, 3, 1),
 (98, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-06-04 08:23:03', 2, 5, 1),
-(99, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-06-04 08:23:05', 3, 5, 1);
+(99, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-06-04 08:23:05', 3, 5, 1),
+(100, 'Ha creado una nueva dirección: estacion del 12 3', '2023-07-18 12:34:23', 2, 1, 1),
+(101, 'Ha creado una nueva dirección: trv 135 44 12', '2023-07-18 12:57:49', 2, 1, 1),
+(102, 'Ha creado una nueva dirección: nose', '2023-07-18 21:04:26', 2, 1, 1),
+(103, 'Ha creado una nueva dirección: la casa de shakira', '2023-07-18 21:11:39', 2, 1, 1),
+(104, 'Ha creado una nueva dirección: bog', '2023-07-18 21:14:35', 2, 1, 1),
+(105, 'Ha creado una nueva dirección: altos de rosario edf 87', '2023-07-18 21:18:24', 2, 1, 1),
+(106, 'Ha eliminado la dirección: al lado de un palo Municipio: al lado de un palo, Departamento: SANTANDER', '2023-07-18 21:20:36', 3, 1, 1),
+(107, 'Ha eliminado la dirección:  Municipio: , Departamento: ', '2023-07-18 21:20:39', 3, 1, 1),
+(108, 'Ha eliminado la dirección: estacion del 12 3 Municipio: estacion del 12 3, Departamento: BOGOTÁ, D.C.', '2023-07-18 21:20:50', 3, 1, 1),
+(109, 'Ha eliminado la dirección: trv 135 44 12 Municipio: trv 135 44 12, Departamento: GUAVIARE', '2023-07-18 21:20:53', 3, 1, 1),
+(110, 'Ha eliminado la dirección: nose Municipio: nose, Departamento: MAGDALENA', '2023-07-18 21:20:57', 3, 1, 1),
+(111, 'Ha eliminado la dirección: la casa de shakira Municipio: la casa de shakira, Departamento: ATLÁNTICO', '2023-07-18 21:21:00', 3, 1, 1),
+(112, 'Ha creado una nueva dirección: edif 43', '2023-07-18 21:23:17', 2, 1, 1),
+(113, 'Ha creado una nueva dirección: a', '2023-07-18 21:32:33', 2, 1, 1),
+(114, 'Ha eliminado la dirección: a Municipio: a, Departamento: ATLÁNTICO', '2023-07-18 22:04:17', 3, 1, 1),
+(115, 'Ha creado una nueva dirección: nose', '2023-07-19 09:34:51', 2, 1, 1),
+(116, 'Ha creado una nueva dirección: trv 135 44 12', '2023-07-19 10:44:16', 2, 1, 1),
+(117, 'Ha creado una nueva dirección: europa', '2023-07-19 10:53:06', 2, 1, 1),
+(118, 'Ha creado una nueva dirección: una casa', '2023-07-19 10:58:44', 2, 1, 1),
+(119, 'Ha creado una nueva dirección: la casa de calamardo', '2023-07-19 11:02:54', 2, 1, 1),
+(120, 'Ha eliminado la dirección: la casa de calamardo Municipio: la casa de calamardo, Departamento: GUAVIARE', '2023-07-19 11:14:13', 3, 1, 1),
+(121, 'Ha eliminado la dirección: una casa Municipio: una casa, Departamento: SUCRE', '2023-07-19 11:14:16', 3, 1, 1),
+(122, 'Ha eliminado la dirección: europa Municipio: europa, Departamento: ARCHIPIÉLAGO DE SAN ANDRÉS, PROVIDENCIA Y SANTA CATALINA', '2023-07-19 11:14:20', 3, 1, 1),
+(123, 'Ha eliminado la dirección: trv 135 44 12 Municipio: trv 135 44 12, Departamento: ATLÁNTICO', '2023-07-19 11:14:23', 3, 1, 1),
+(124, 'Ha eliminado la dirección: nose Municipio: nose, Departamento: ATLÁNTICO', '2023-07-19 11:14:27', 3, 1, 1),
+(125, 'Ha eliminado la dirección: edif 43 Municipio: edif 43, Departamento: BOLÍVAR', '2023-07-19 11:14:30', 3, 1, 1),
+(126, 'Ha eliminado la dirección: altos de rosario edf 87 Municipio: altos de rosario edf 87, Departamento: BOLÍVAR', '2023-07-19 11:14:34', 3, 1, 1),
+(127, 'Ha eliminado la dirección: bog Municipio: bog, Departamento: BOGOTÁ, D.C.', '2023-07-19 11:14:38', 3, 1, 1),
+(128, 'Ha eliminado la dirección:  Municipio: , Departamento: ', '2023-07-19 11:14:46', 3, 1, 1),
+(129, 'Ha creado una nueva dirección: narnia', '2023-07-19 11:16:39', 2, 1, 1),
+(130, 'Ha creado una nueva dirección: estacion del 12 3', '2023-07-19 11:18:39', 2, 1, 1),
+(131, 'Ha creado una nueva dirección: bog', '2023-07-19 11:27:20', 2, 1, 1),
+(132, 'Ha creado una nueva dirección: la casa de shakira', '2023-07-20 09:56:42', 2, 1, 1),
+(133, 'Ha eliminado la dirección: la casa de shakira Municipio: la casa de shakira, Departamento: ATLÁNTICO', '2023-07-20 11:17:56', 3, 1, 1),
+(134, 'Ha eliminado la dirección:  Municipio: , Departamento: ', '2023-07-20 11:18:11', 3, 1, 1),
+(135, 'Ha eliminado la dirección: bog Municipio: bog, Departamento: ATLÁNTICO', '2023-07-20 11:30:38', 3, 1, 1),
+(136, 'Ha eliminado la dirección: estacion del 12 3 Municipio: estacion del 12 3, Departamento: ATLÁNTICO', '2023-07-20 11:33:46', 3, 1, 1),
+(137, 'Ha eliminado la dirección: narnia Municipio: narnia, Departamento: TOLIMA', '2023-07-20 11:36:13', 3, 1, 1),
+(138, 'Ha eliminado la dirección:  Municipio: , Departamento: ', '2023-07-20 11:36:19', 3, 1, 1),
+(139, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:27', 2, 5, 1),
+(140, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:29', 3, 5, 1),
+(141, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:29', 2, 5, 1),
+(142, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:30', 3, 5, 1),
+(143, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:30', 2, 5, 1),
+(144, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:30', 3, 5, 1),
+(145, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:31', 2, 5, 1),
+(146, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:33', 3, 5, 1),
+(147, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:34', 2, 5, 1),
+(148, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:35', 3, 5, 1),
+(149, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:36', 2, 5, 1),
+(150, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:37', 3, 5, 1),
+(151, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:38', 2, 5, 1),
+(152, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:39', 3, 5, 1),
+(153, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:39', 2, 5, 1),
+(154, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:39', 3, 5, 1),
+(155, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:39', 2, 5, 1),
+(156, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:39', 3, 5, 1),
+(157, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:40', 2, 5, 1),
+(158, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:40', 3, 5, 1),
+(159, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:40', 2, 5, 1),
+(160, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:40', 3, 5, 1),
+(161, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:40', 2, 5, 1),
+(162, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:41', 3, 5, 1),
+(163, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:41', 2, 5, 1),
+(164, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:41', 3, 5, 1),
+(165, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:41', 2, 5, 1),
+(166, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:41', 3, 5, 1),
+(167, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:42', 2, 5, 1),
+(168, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:42', 3, 5, 1),
+(169, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:51', 2, 5, 1),
+(170, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:51', 3, 5, 1),
+(171, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:52', 2, 5, 1),
+(172, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:53', 3, 5, 1),
+(173, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:53', 2, 5, 1),
+(174, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:54', 3, 5, 1),
+(175, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:55', 2, 5, 1),
+(176, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:37:55', 3, 5, 1),
+(177, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:38:06', 2, 5, 1),
+(178, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:38:07', 3, 5, 1),
+(179, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:38:08', 2, 5, 1),
+(180, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 11:38:15', 3, 5, 1),
+(181, 'Ha editado sus datos personales, ha hecho los siguientes cambios: Su telefono cambio de 3118541945 a 3118541948.', '2023-07-20 13:30:27', 1, 1, 1),
+(182, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 21:02:56', 2, 5, 1),
+(183, 'Has creado una marca: louis vuitton', '2023-07-22 13:51:14', 2, 6, 1),
+(184, 'Has creado una marca: Jordan', '2023-07-22 14:07:37', 2, 6, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `imagen`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `imagen` (
@@ -273,7 +372,7 @@ CREATE TABLE `imagen` (
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_producto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `imagen`
@@ -289,6 +388,8 @@ INSERT INTO `imagen` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `estado
 --
 -- Estructura de tabla para la tabla `marca`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `marca` (
   `id` int(11) NOT NULL,
@@ -297,7 +398,7 @@ CREATE TABLE `marca` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `marca`
@@ -305,12 +406,21 @@ CREATE TABLE `marca` (
 
 INSERT INTO `marca` (`id`, `nombre`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
 (1, 'Coca-Cola', 'producto_default.jpg', '2023-05-18 16:20:48', '2023-05-18 16:20:48', 'A'),
-(2, 'Buchanan\'s', 'producto_default.jpg', '2023-05-18 16:21:48', '2023-05-18 16:21:48', 'A');
+(2, 'Buchanan\'s', 'producto_default.jpg', '2023-05-18 16:21:48', '2023-05-18 16:21:48', 'A'),
+(3, 'nike', '64bc12a0c7509-nikeLogo.jpg', '2023-07-22 12:32:16', '2023-07-22 12:32:16', 'I'),
+(4, 'nike', '64bc131f1bef9-nikeLogo.jpg', '2023-07-22 12:34:23', '2023-07-22 12:34:23', 'I'),
+(5, 'Nike', '64bc13abbc78d-nikeLogo.jpg', '2023-07-22 12:36:43', '2023-07-22 12:36:43', 'A'),
+(6, 'Adidas', '64bc14e06e0d1-adidasLogo.jpg', '2023-07-22 12:41:52', '2023-07-22 12:41:52', 'I'),
+(7, 'Adidas', '64bc15395810a-adidas originals.jpg', '2023-07-22 12:43:21', '2023-07-22 12:43:21', 'A'),
+(8, 'louis vuitton', '64bc2522483e0-louis vouton.jpg', '2023-07-22 13:51:14', '2023-07-22 13:51:14', 'A'),
+(9, 'Jordan', '64bc28f98827d-Jordan.jpg', '2023-07-22 14:07:37', '2023-07-22 14:07:37', 'A');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `modulo`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `modulo` (
@@ -318,7 +428,7 @@ CREATE TABLE `modulo` (
   `nombre` varchar(100) NOT NULL,
   `icono` varchar(100) NOT NULL,
   `estado` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `modulo`
@@ -329,12 +439,15 @@ INSERT INTO `modulo` (`id`, `nombre`, `icono`, `estado`) VALUES
 (2, 'Mis compras', '<i class=\"fa-solid fa-cart-shopping\" style=\"color: #04c825;\"></i>', 'A'),
 (3, 'Producto', '<i class=\"fa-solid fa-box\" style=\"color: #00ffe1;\"></i>', 'A'),
 (4, 'Notificaciones', '<i class=\"fa-solid fa-bell\" style=\"color: #ffdd00;\"></i>', 'A'),
-(5, 'Favoritos', '<i class=\"fa-solid fa-heart\" style=\"color: #d10000;\"></i>', 'A');
+(5, 'Favoritos', '<i class=\"fa-solid fa-heart\" style=\"color: #d10000;\"></i>', 'A'),
+(6, 'Marcas', '<i class=\"fa-solid fa-tags\" style=\"color: #005eff;\"></i>', 'A');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `municipios`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `municipios` (
@@ -342,7 +455,7 @@ CREATE TABLE `municipios` (
   `municipio` varchar(255) NOT NULL DEFAULT '',
   `estado` int(1) NOT NULL,
   `departamento_id` int(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `municipios`
@@ -1455,6 +1568,8 @@ INSERT INTO `municipios` (`id_municipio`, `municipio`, `estado`, `departamento_i
 --
 -- Estructura de tabla para la tabla `notificacion`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `notificacion` (
   `id` int(11) NOT NULL,
@@ -1468,7 +1583,7 @@ CREATE TABLE `notificacion` (
   `estado_abierto` int(10) NOT NULL DEFAULT 0,
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `notificacion`
@@ -1497,6 +1612,8 @@ INSERT INTO `notificacion` (`id`, `titulo`, `asunto`, `contenido`, `imagen`, `ur
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `pregunta` (
   `id` int(11) NOT NULL,
@@ -1506,7 +1623,7 @@ CREATE TABLE `pregunta` (
   `respuesta` int(10) NOT NULL DEFAULT 0,
   `id_producto_tienda` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pregunta`
@@ -1532,6 +1649,8 @@ INSERT INTO `pregunta` (`id`, `contenido`, `fecha_creacion`, `estado`, `respuest
 --
 -- Estructura de tabla para la tabla `producto`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `producto` (
   `id` int(11) NOT NULL,
@@ -1543,7 +1662,7 @@ CREATE TABLE `producto` (
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_marca` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto`
@@ -1558,6 +1677,8 @@ INSERT INTO `producto` (`id`, `nombre`, `SKU`, `detalles`, `imagen_principal`, `
 --
 -- Estructura de tabla para la tabla `producto_subcategoria`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `producto_subcategoria` (
   `id` int(11) NOT NULL,
@@ -1566,7 +1687,7 @@ CREATE TABLE `producto_subcategoria` (
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_producto` int(11) NOT NULL,
   `id_subcategoria` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto_subcategoria`
@@ -1581,6 +1702,8 @@ INSERT INTO `producto_subcategoria` (`id`, `fecha_creacion`, `fecha_edicion`, `e
 --
 -- Estructura de tabla para la tabla `producto_tienda`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `producto_tienda` (
   `id` int(11) NOT NULL,
@@ -1594,7 +1717,7 @@ CREATE TABLE `producto_tienda` (
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_producto` int(11) NOT NULL,
   `id_tienda` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `producto_tienda`
@@ -1609,6 +1732,8 @@ INSERT INTO `producto_tienda` (`id`, `precio`, `cantidad`, `descuento`, `garanti
 --
 -- Estructura de tabla para la tabla `resena`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `resena` (
   `id` int(11) NOT NULL,
@@ -1619,7 +1744,7 @@ CREATE TABLE `resena` (
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_producto_tienda` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `resena`
@@ -1635,6 +1760,8 @@ INSERT INTO `resena` (`id`, `calificacion`, `descripcion`, `fecha_creacion`, `fe
 --
 -- Estructura de tabla para la tabla `respuesta`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `respuesta` (
   `id` int(11) NOT NULL,
@@ -1642,7 +1769,7 @@ CREATE TABLE `respuesta` (
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_pregunta` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `respuesta`
@@ -1667,6 +1794,8 @@ INSERT INTO `respuesta` (`id`, `contenido`, `fecha_creacion`, `estado`, `id_preg
 --
 -- Estructura de tabla para la tabla `subcategoria`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `subcategoria` (
   `id` int(11) NOT NULL,
@@ -1675,7 +1804,7 @@ CREATE TABLE `subcategoria` (
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_categoria` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `subcategoria`
@@ -1690,6 +1819,8 @@ INSERT INTO `subcategoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `
 --
 -- Estructura de tabla para la tabla `tienda`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `tienda` (
   `id` int(11) NOT NULL,
@@ -1703,7 +1834,7 @@ CREATE TABLE `tienda` (
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_usuario` int(11) NOT NULL,
   `id_municipio` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tienda`
@@ -1717,13 +1848,15 @@ INSERT INTO `tienda` (`id`, `nombre`, `razon_social`, `direccion`, `RUC`, `image
 --
 -- Estructura de tabla para la tabla `tipo_historial`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `tipo_historial` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `icono` varchar(100) NOT NULL,
   `estado` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipo_historial`
@@ -1739,12 +1872,14 @@ INSERT INTO `tipo_historial` (`id`, `nombre`, `icono`, `estado`) VALUES
 --
 -- Estructura de tabla para la tabla `tipo_usuario`
 --
+-- Creación: 09-07-2023 a las 00:16:28
+--
 
 CREATE TABLE `tipo_usuario` (
   `id` int(11) NOT NULL,
   `tipo` varchar(50) NOT NULL,
   `estado` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipo_usuario`
@@ -1759,6 +1894,8 @@ INSERT INTO `tipo_usuario` (`id`, `tipo`, `estado`) VALUES
 
 --
 -- Estructura de tabla para la tabla `usuario`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `usuario` (
@@ -1775,14 +1912,14 @@ CREATE TABLE `usuario` (
   `avatar` varchar(200) NOT NULL DEFAULT 'default.jpg',
   `estado` varchar(10) NOT NULL DEFAULT 'A',
   `id_tipo` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
 INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`, `referencia`, `dni`, `email`, `telefono`, `avatar`, `estado`, `id_tipo`) VALUES
-(1, 'Itoshi', 'JfO/uat5gkwbZo1vKJksyQ==', 'itoshi', 'seichiro', 'Terraria 0000', 'another world', 1005324417, 'notengo@gmail.com', 3118541945, '646647f66b09e-sae.jpg', 'A', 2),
+(1, 'Itoshi', 'JfO/uat5gkwbZo1vKJksyQ==', 'itoshi', 'seichiro', 'Terraria 0000', 'another world', 1005324417, 'notengo@gmail.com', 3118541948, '646647f66b09e-sae.jpg', 'A', 2),
 (2, 'Diegonair', 'uX1eiOW8RO9xn6SNkAIXsg==', 'Diego', 'Suarez', NULL, NULL, 123456789, 'Diego@gmail.com', 1234567891, 'default.jpg', 'A', 2),
 (3, 'Angelly', 'ssn0uEOcz86BM22vp2HObg==', 'Angelly', 'Osma', NULL, NULL, 2147483647, 'Angelly@gmail.com', 1234567890, '646a6d12ce18c-arquitecta.jpg', 'A', 2),
 (4, 'sergioflorez422', 'iKRc1/OqQTNJj/yY8G1YXA==', 'sergio', 'florez', NULL, 'no se ha registrado', 1005282436, 'sergioflorez422@gmail.com', 3142019084, '646e98ac80c99-pim nn.jpg', 'A', 2),
@@ -1794,12 +1931,15 @@ INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`
 (10, 'AlexOrt', 'JfO/uat5gkwbZo1vKJksyQ==', 'Alexander', 'Ortega', NULL, 'no se ha registrado', 1005210948, 'A@hotmail.com', 3172684085, '6467eb24c52a3-IMG-20230517-WA0035.jpg', 'A', 2),
 (12, 'Roberto Carlos', 'f4eydo2HE1M9/h7ed3lYQw==', 'Johanna', 'Orduz', NULL, 'no se ha registrado', 1234567890, 'robertocarlos@gmail.com', 3216843684, '646e3fd2df335-jperez_logo_de_fox_colores_azul_oscuro_y_gris_logo_44b47e7b-cd60-40c5-8d8c-6f67acf8100c.png', 'A', 2),
 (13, 'Marlon', '9qsvvCtouhWom/6tOwdTyw==', 'Marlon', 'Hernandez', NULL, 'no se ha registrado', 1005165478, 'marlonyesid081937@gmail.com', 3102326645, 'default.jpg', 'A', 2),
-(14, 'Kenia ', 'C1VeEViU4sLrZLvWeksQ2Q==', 'Kenia luengas ', 'Luengas', NULL, 'no se ha registrado', 1102714558, 'kenialuengas@gamil.com', 3118051334, 'default.jpg', 'A', 2);
+(14, 'Kenia ', 'C1VeEViU4sLrZLvWeksQ2Q==', 'Kenia luengas ', 'Luengas', NULL, 'no se ha registrado', 1102714558, 'kenialuengas@gamil.com', 3118051334, 'default.jpg', 'A', 2),
+(15, 'gata123', 'TJtp6cJ/6kDh4Je/H8YbUw==', 'gata', 'dayana', NULL, 'no se ha registrado', 1005259682, 'gata@gmail.com', 3142584526, 'default.jpg', 'A', 2);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `usuario_municipio`
+--
+-- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `usuario_municipio` (
@@ -1809,31 +1949,37 @@ CREATE TABLE `usuario_municipio` (
   `id_municipio` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `estado_d` varchar(10) NOT NULL DEFAULT 'A'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario_municipio`
 --
 
 INSERT INTO `usuario_municipio` (`id`, `direccion`, `referencia`, `id_municipio`, `id_usuario`, `estado_d`) VALUES
-(1, 'la casa blanca', '', 107, 1, 'I'),
 (3, 'el portal de isrrael', 'edificio amarillo', 291, 3, 'A'),
 (4, 'trv135#879', 'cerca al gato echado ', 661, 4, 'A'),
 (5, 'el cielo', 'al lado del árbol que esta en el cielo', 125, 4, 'A'),
-(6, '#trv135 49-80', 'cerca de donde alejandro', 20, 1, 'I'),
-(7, 'prueba', 'prueba', 94, 1, 'I'),
-(8, 'prueba2', 'prueba2', 152, 1, 'I'),
-(9, 'trv135#879', 'prueba3', 48, 1, 'I'),
-(10, 'el portal de isrrael', 'al lado de la iglesia', 291, 5, 'A'),
-(11, 'quebrada uno', 'al lado del rio', 282, 1, 'I'),
-(12, 'playa', 'cerca de la casa de shakira', 88, 1, 'I'),
-(13, 'en un jardín', 'cerca de una rosa', 388, 1, 'I'),
-(14, 'la cumbre', 'allá matan', 291, 1, 'I'),
-(15, 'de chile', 'cerca de donde angela', 891, 1, 'I'),
 (16, 'sapo', 'oe34', 374, 9, 'A'),
 (17, 'Calle 4', 'Uwu ', 156, 10, 'I'),
 (18, 'trv135#879', 'al lado de un palo', 374, 12, 'A'),
-(19, 'al lado de un palo', 'el palo es negro', 863, 1, 'A');
+(19, 'al lado de un palo', 'el palo es negro', 863, 1, 'I'),
+(20, 'estacion del 12 3', 'es un estacionamiento', 107, 1, 'I'),
+(21, 'trv 135 44 12', 'al lado de un rio azul bonito', 315, 1, 'I'),
+(22, 'nose', 'nose', 672, 1, 'I'),
+(23, 'la casa de shakira', 'ya no vive con pique', 88, 1, 'I'),
+(24, 'bog', 'bog', 107, 1, 'I'),
+(25, 'altos de rosario edf 87', 'muy bonito el edificio y bonito jardin con piscina', 28, 1, 'I'),
+(26, 'edif 43', 'bonito edificio tambien', 28, 1, 'I'),
+(27, 'a', 'a', 362, 1, 'I'),
+(32, 'nose', 'nose', 88, 1, 'I'),
+(33, 'trv 135 44 12', 'bog', 88, 1, 'I'),
+(34, 'europa', 'nose', 685, 1, 'I'),
+(35, 'una casa', 'esta al lado del parque', 137, 1, 'I'),
+(36, 'la casa de calamardo', 'al lado de una piña', 142, 1, 'I'),
+(37, 'narnia', 'al lado del lago', 29, 1, 'I'),
+(38, 'estacion del 12 3', 'es un estacionamiento', 88, 1, 'I'),
+(39, 'bog', 'al lado de un rio azul bonito', 156, 1, 'I'),
+(40, 'la casa de shakira', 'bog', 152, 1, 'I');
 
 --
 -- Índices para tablas volcadas
@@ -2028,7 +2174,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -2040,13 +2186,13 @@ ALTER TABLE `imagen`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
 --
 ALTER TABLE `modulo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `municipios`
@@ -2124,13 +2270,13 @@ ALTER TABLE `tipo_usuario`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_municipio`
 --
 ALTER TABLE `usuario_municipio`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Restricciones para tablas volcadas
