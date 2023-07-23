@@ -1,6 +1,4 @@
 $(document).ready(function(){
-
-    // var datatable;
     toastr.options={
         'debug': false,
         'positionClass': 'toast-bottom-right',
@@ -14,7 +12,7 @@ $(document).ready(function(){
     Loader();
     // setTimeout(verificar_sesion,2000);
     verificar_sesion();
-    
+    bsCustomFileInput.init();
 
     async function read_notificaciones(){
         funcion="read_notificaciones";
@@ -367,12 +365,12 @@ $(document).ready(function(){
                     let sesion=JSON.parse(response);
                     mostrar_navegacion(sesion);
                     mostrar_sidebar(sesion);
-                    $('#active_nav_favoritos').addClass('active bg-black');
+                    $('#active_nav_marcas').addClass('active bg-black');
                     $('#avatar_menu').attr('src','../util/img/users/' + sesion.avatar);
                     $('#usuario_menu').text(sesion.user);
                     read_notificaciones();//trae las notificaciones dependiendo del usuario
                     read_favoritos();//
-                    read_all_favoritos();
+                    read_all_marcas();
                     CloseLoader();
                 }else{
                     location.href='login.php';
@@ -390,60 +388,41 @@ $(document).ready(function(){
         }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
 
-    async function read_all_favoritos(id_usuario){
-        funcion="read_all_favoritos";
-        let data = await fetch('../controllers/FavoritoController.php',{
+    async function read_all_marcas(){
+        funcion="read_all_marcas";
+        let data = await fetch('../controllers/MarcaController.php',{
             method:'POST',
             headers:{'Content-Type':'application/x-www-form-urlencoded'},
             body:'funcion='+funcion
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
+            // console.log(response);
             try {
-                let favoritos = JSON.parse(response);
-                console.log(favoritos);
-                
-                let template='';
-                let favorites = [];
-                favoritos.forEach(favorito=>{
-                    let template='';
-                    template+=`
-                        <div class="row">
-                            <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                                <button type="button" class="btn eliminar_fav" attrid="${favorito.id}">
-                                    <i class="fa-solid fa-trash" style="color: #bd0000;"></i>
-                                </button>
-                            </div>
-                            <div class="col-sm-11">
-                                <a href="../${favorito.url}" class="dropdown-item">
-                                    <div class="media">
-                                    <img src="../util/img/producto/${favorito.imagen}" alt="User Avatar" class="img-size-50 mr-3">
-                                        <div class="media-body">
-                                            <h3 class="dropdown-item-title">
-                                                ${favorito.titulo}
-                                            `;
-                        
-                        template+=`
-                                            </h3>
-                                            <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i>${favorito.precio}</p>
-                                            <span class=" text-sm">${favorito.fecha_creacion}</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    favorites.push({celda: template});
-                });
-                datatable=$('#fav').DataTable({
-                    data: favorites,
+                let marcas = JSON.parse(response);
+                // console.log(marcas);
+                datatable=$('#marca').DataTable({
+                    data: marcas,
                     "aaSorting":[],
                     "searching":true,
                     "scrollX":true,
                     "autoWidth":false,
+                    "responsive":true,
+                    "processing":true,
                     columns: [
-                        {data: "celda"}
+                        {data: "nombre"},
+                        {
+                            'render':function(data,type,datos,meta){
+                                return `<img width="100" height="100" src="../util/img/marca/${datos.imagen}">`;
+                            }
+                        },
+                        {data: "fecha_creacion"},
+                        {
+                            'render':function(data,type,datos,meta){
+                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                            }
+                        },
                     ],
                     "destroy":true,
                     "language":colombia
@@ -462,33 +441,36 @@ $(document).ready(function(){
         }
     }
 
-    async function eliminar_favorito(id_favorito){
-        funcion="eliminar_favorito";
-        let data = await fetch('../controllers/FavoritoController.php',{
+    async function crear_marca(datos){
+        let data = await fetch('../controllers/MarcaController.php',{
             method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'funcion='+funcion+'&&id_favorito='+id_favorito
+            body: datos
         })
         if (data.ok) {
             let response = await data.text();
             // console.log(response);
             try {
                 let respuesta = JSON.parse(response);
-                console.log(respuesta.mensaje);
-                if (respuesta.mensaje=="favorito eliminado") {
-                    toastr.success('El producto se eliminó de sus favoritos');
+                if (respuesta.mensaje=="Marca Creada") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha agregado la marca.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function(){
+                        $('#form-marca').trigger('reset');//reseteamos el formulario
+                        read_all_marcas();
+                    })
                 }
-                else if(respuesta.mensaje=="error al eliminar"){
-                    toastr.error('No intente vulnerar el sistema');
-                }
-                read_all_favoritos();
-                read_favoritos();
-                
-
             } catch (error) {
                 console.error(error);
                 console.log(response);
-                toastr.error('Comuniquese con el area de sistemas');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Hubo algún Error!!',
+                    text: 'Por favor Comuniquese con el area de sistemas.'
+                })
             }
         } else {
             Swal.fire({
@@ -499,14 +481,53 @@ $(document).ready(function(){
         }
     }
 
-    $(document).on('click', '.eliminar_fav',(e)=>{
-        let elemento = $(this)[0].activeElement;//capturamos el elemento o boton
-        let id = $(elemento).attr('attrid');
-        console.log(id);
-        eliminar_favorito(id);
-        // eliminar_notificacion(id);
-    })
+    // Validaciones---------------------------------------------------------------
+    // el siguiente evento se ejecuta cuando las validaciones ya están correctas
+    // tambien caundo el boton submit del formulario sea presionado
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion='crear_marca';
+            let datos=new FormData($('#form-marca')[0]);
+            datos.append('funcion',funcion);
+            crear_marca(datos);
+        }
+    });
 
+    $('#form-marca').validate({//este tipo de reglas vienen por defecto
+    rules: {
+        nom_marc: {
+            required: true
+        },
+        img_marc: {
+            required: true,
+            extension: "png|jpg|jpeg|jfif"
+        }
+    },
+    messages: {
+        nom_marc:{
+            required: "*Este campo es obligatorio"
+        },
+        img_marc:{
+            required: "*Este campo es obligatorio",
+            extension: 'Solo es valido el formato: png,jpg,jpeg'
+        }
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+    }
+    });
+
+    // el uso de los componentes de carga-------------------------------------------
     function Loader(mensaje){
         if (mensaje==''||mensaje==null) {
             mensaje='Cargando datos...';
@@ -531,7 +552,102 @@ $(document).ready(function(){
             })
         }
     }
-});
+
+    //El uso de eventos--------------------------------------------------------------
+    $(document).on('click', '.edit', function (e) { // Utilizamos function en lugar de ()=>
+        let elemento = e.currentTarget; // Utilizamos e.currentTarget para obtener el elemento que desencadenó el evento
+        let id = $(elemento).attr('id');
+        let nombre = $(elemento).attr('nombre');
+        let img = $(elemento).attr('img');
+        // console.log(id, nombre, img);
+        $('#widget_nombre_marca').text(nombre);
+        $('#widget_imagen_marca').attr('src','../util/img/marca/'+img);
+        $('#nom_marc_mod').val(nombre);
+        $('#id_marc_mod').val(id);
+    });
+
+    async function editar_marca(datos){
+        let data = await fetch('../controllers/MarcaController.php',{
+            method:'POST',
+            body: datos
+        })
+        if (data.ok) {
+            let response = await data.text();
+            // console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if (respuesta.mensaje=="Marca Creada") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha editado la marca.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function(){
+                        $('#form-marca-mod').trigger('reset');//reseteamos el formulario
+                        read_all_marcas();
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Hubo algún Error!!',
+                    text: 'Por favor Comuniquese con el area de sistemas.'
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+              })
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion='editar_marca';
+            let datos=new FormData($('#form-marca-mod')[0]);
+            datos.append('funcion',funcion);
+            editar_marca(datos);//mandamos los datos a la funcion
+        }
+    });
+
+    $('#form-marca-mod').validate({//este tipo de reglas vienen por defecto
+        rules: {
+            nom_marc_mod: {
+                required: true
+            },
+            img_marc_mod: {
+                extension: "png|jpg|jpeg|jfif"
+            }
+        },
+        messages: {
+            nom_marc_mod:{
+                required: "*Este campo es obligatorio"
+            },
+            img_marc_mod:{
+                extension: 'Solo es valido el formato: png,jpg,jpeg'
+            }
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+            $(element).removeClass('is-valid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            $(element).addClass('is-valid');
+        }
+    });
+
+})
 
 // idioma del DATATABLE
 let colombia = {

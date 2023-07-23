@@ -57,4 +57,4 @@
     include_once 'Layouts/general/footer.php';
     ?>
 
-    <script src="notificaciones.js"></script>
+    <script src="notificaciones1.js"></script>

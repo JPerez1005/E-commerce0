@@ -1,8 +1,8 @@
 $(document).ready(function(){
     var funcion;
     Loader();
-    // setTimeout(verificar_sesion,850);
-    verificar_sesion();
+    setTimeout(verificar_sesion,2050);
+    // verificar_sesion();
 
 
     async function read_notificaciones(){
@@ -319,6 +319,15 @@ $(document).ready(function(){
                   <i class="fa-regular fa-heart" style="color: #d10000;"></i>
                     <p id="nav_cont_fav">
                       Favoritos
+                    </p>
+                  </a>
+                </li>
+                <li class="nav-header">Producto</li>
+                <li id="nav_marcas" class="nav-item">
+                  <a id="active_nav_marcas" href="views/marcas.php" class="nav-link">
+                  <i class="fa-regular fa-box" style="color: #27a029;"></i>
+                    <p id="nav_cont_noti">
+                      Marcas
                     </p>
                   </a>
                 </li>

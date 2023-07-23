@@ -23,7 +23,7 @@ if($_POST['funcion']=='mostrar_historial'){
             $bandera=$fecha;//se compara la fecha guardada con la que acaba de entrar al if
             //se hace para ver si son iguales y meterlas en un mismo grupo
         }
-        if ($cont==4) {//apartir de los ultimos tres días se muestra la información de esos dias
+        if ($cont==3) {//apartir de los ultimos tres días se muestra la información de esos dias
             $fechas[$cont-1][]=array(//se colocó un menos uno para que en mi perfil.js la funcion
                 //mostrar historial reciba los foreach desde 0 y no desde uno
                 //esto se hace debido a que los foreach no admiten numeros desde 1
@@ -37,8 +37,8 @@ if($_POST['funcion']=='mostrar_historial'){
                 'm_icono'=>$objeto->m_icono
             );
         } else {
-            if ($cont==5) {//si nos pasamos a 4 dias se rompe
-                break;//todo se para y no agregamos nada más
+            if ($cont==4) {//si nos pasamos a 4 dias se rompe
+                break;//all todo se para y no agregamos nada más
             } else {
                 $fechas[$cont-1][]=array(//se colocó un menos uno para que en mi perfil.js la funcion
                     //mostrar historial reciba los foreach desde 0 y no desde uno

@@ -54,4 +54,4 @@
     include_once 'views/Layouts/footer.php';
     ?>
 
-    <script src="index.js"></script>
+    <script src="index1.js"></script>
