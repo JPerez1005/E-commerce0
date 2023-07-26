@@ -45,12 +45,12 @@
 
         function editar($id_marca,$nombre,$nombre_imagen){
             if ($nombre_imagen!='') {
-                $sql="UPDATE marca SET nombre=:nombre, imagen:=img
+                $sql="UPDATE marca SET nombre=:nombre, imagen=:img
                         WHERE id=:id_marca";
                 $query=$this->acceso->prepare($sql);
                 $variables=array(
                     ':nombre'=>$nombre,
-                    ':imagen'=>$nombre_imagen,
+                    ':img'=>$nombre_imagen,
                     ':id_marca'=>$id_marca
                 );
                 $query->execute($variables);
@@ -64,7 +64,19 @@
                 );
                 $query->execute($variables);
             }
-            
-            
+        }
+
+        function eliminar_marca($id_marca){//no necesitamos ningun parametro porque solo queremos
+            //traer todos los departamentos
+            $sql="UPDATE marca SET estado=:estado
+                    WHERE id=:id_marca";
+            $query=$this->acceso->prepare($sql);
+            $variables=array(
+                ':id_marca'=>$id_marca,
+                ':estado'=>'I'
+            );
+            $query->execute($variables);
+            // $this->objetos = $query->fetchAll();
+            // return $this->objetos;
         }
     }

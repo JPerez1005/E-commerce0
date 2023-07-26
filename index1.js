@@ -93,6 +93,7 @@ $(document).ready(function(){
               })
         }
     }
+
     async function read_favoritos(){
         funcion="read_favoritos";
         let data = await fetch('controllers/FavoritoController.php',{
@@ -300,6 +301,7 @@ $(document).ready(function(){
         $('#menu_superior').html(template);
 
     }
+
     function mostrar_sidebar(usuario){
         let template=``;
         if (usuario===undefined||usuario==''||usuario==null) {
@@ -307,35 +309,58 @@ $(document).ready(function(){
             template=`
                 <li class="nav-header">Perfil</li>
                 <li id="nav_notificaciones" class="nav-item">
-                  <a id="active_nav_notificaciones" href="views/notificaciones.php" class="nav-link">
-                    <i class="fa-regular fa-bell" style="color: #ffdd00;"></i>
-                    <p id="nav_cont_noti">
-                      Notificaciones
-                    </p>
-                  </a>
+                    <a id="active_nav_notificaciones" href="views/notificaciones.php" class="nav-link">
+                        <i class="fa-regular fa-bell" style="color: #ffdd00;"></i>
+                        <p id="nav_cont_noti">
+                            Notificaciones
+                        </p>
+                    </a>
                 </li>
                 <li id="nav_favoritos" class="nav-item">
-                  <a id="active_nav_favoritos" href="views/favoritos.php" class="nav-link">
-                  <i class="fa-regular fa-heart" style="color: #d10000;"></i>
-                    <p id="nav_cont_fav">
-                      Favoritos
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-header">Producto</li>
+                    <a id="active_nav_favoritos" href="views/favoritos.php" class="nav-link">
+                    <i class="fa-regular fa-heart" style="color: #d10000;"></i>
+                        <p id="nav_cont_fav">
+                            Favoritos
+                        </p>
+                    </a>
+                </li>`;
+            if (usuario.tipo_usuario==1) {
+                template+=`<li class="nav-header">Producto</li>
                 <li id="nav_marcas" class="nav-item">
                     <a id="active_nav_marcas" href="views/marcas.php" class="nav-link">
-                    <i class="fa-solid fa-tags" style="color: #005eff;"></i>
-                    <p id="nav_cont_marc">
-                      Marcas
-                    </p>
-                  </a>
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
                 </li>
-            `;
+                `;
+            }else if(usuario.tipo_usuario==2){
+                template+=`<li class="nav-header">Producto</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="views/marcas.php" class="nav-link">
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
+                </li>
+                `;
+            }else if(usuario.tipo_usuario==3){
+                template+=`<li class="nav-header">Producto</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="views/marcas.php" class="nav-link">
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
+                </li>
+                `;    
+            }
         }
         $('#loader_2').hide(500);
         $('#menu_lateral').html(template);
-
     }
 
     async function verificar_sesion() {

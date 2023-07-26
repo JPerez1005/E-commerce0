@@ -7,6 +7,7 @@ $historial = new Historial();
 session_start();
 date_default_timezone_set('America/Bogota');
 $fecha_actual=date('d-m-Y');
+
 if($_POST['funcion']=='read_all_marcas'){
     $marca->read_all_marcas();
     $json=array();
@@ -50,14 +51,14 @@ if($_POST['funcion']=='editar_marca'){
     $id_usuario=$_SESSION['id'];
     $nombre=$_POST['nom_marc_mod'];
     $img=$_FILES['img_marc_mod']['name'];
-    $formateado=str_replace(" ","+",$_POST['id_marca_mod']);
-    $id_marca=openssl_decrypt($formateado,CODE,KEY);
+    $formateado = str_replace(" ","+",$_POST['id_marc_mod']);
+    $id_marca = openssl_decrypt($formateado,CODE,KEY);
     $mensaje='';
     $nombre_imagen='';
     $datos_cambiados='ha hecho los siguientes cambios: ';
-    if (is_numeric($id_marca)) {
+    if(is_numeric($id_marca)){
         $marca->obtener_marca($id_marca);
-        // var_dump($marca);
+        // var_dump($marca);//var_dump daña la conversion a json
         if($nombre!=$marca->objetos[0]->nombre || $img!=''){
             if ($nombre!=$marca->objetos[0]->nombre) {
                 $datos_cambiados.='Una marca cambió su nombre de '.$marca->objetos[0]->nombre.' a '.$nombre.','; 
@@ -69,10 +70,11 @@ if($_POST['funcion']=='editar_marca'){
                 // el contenido de la img es el archivo temporal q se guarda en el navegador
                 // eso se guarda en la ruta
                 move_uploaded_file($_FILES['img_marc_mod']['tmp_name'],$ruta);
-            }
-            $avatar_actual=$marca->objetos[0]->imagen;
-            if ($avatar_actual!='marca_default.png') {
-                unlink('../util/img/marca/'.$avatar_actual);
+                //ya que es diferente de vacio borramos la img y colocamos la otra
+                $avatar_actual=$marca->objetos[0]->imagen;
+                if ($avatar_actual!='marca_default.png') {
+                    unlink('../util/img/marca/'.$avatar_actual);
+                }
             }
             $marca->editar($id_marca,$nombre,$nombre_imagen);
             $descripcion='Has editado una marca: '.$datos_cambiados; 
@@ -89,7 +91,28 @@ if($_POST['funcion']=='editar_marca'){
         $jsonstring=json_encode($json);
         echo $jsonstring;
     }else{
-        echo 'error';//vulneracion del sistema
+        echo 'error';
+    }
+    
+}
+
+if($_POST['funcion']=='eliminar_marca'){
+    $id_usuario=$_SESSION['id'];
+    $nombre=$_POST['nombre'];
+    $formateado = str_replace(" ","+",$_POST['id']);
+    $id_marca = openssl_decrypt($formateado,CODE,KEY);
+    if (is_numeric($id_marca)) {
+        $marca->eliminar_marca($id_marca);
+        $descripcion='Has eliminado una marca: '.$nombre;
+        $historial->crear_historial($descripcion,3,6,$id_usuario);
+        $mensaje='success';
+        $json=array(
+            'mensaje'=>$mensaje,
+        );
+        $jsonstring=json_encode($json);
+        echo $jsonstring;
+    } else {
+        echo 'error';
     }
     
 }

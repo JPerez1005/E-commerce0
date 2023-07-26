@@ -318,35 +318,58 @@ $(document).ready(function(){
             template=`
                 <li class="nav-header">Perfil</li>
                 <li id="nav_notificaciones" class="nav-item">
-                  <a id="active_nav_notificaciones" href="../views/notificaciones.php" class="nav-link">
-                    <i class="fa-regular fa-bell" style="color: #ffdd00;"></i>
-                    <p id="nav_cont_noti">
-                      Notificaciones
-                    </p>
-                  </a>
+                    <a id="active_nav_notificaciones" href="../views/notificaciones.php" class="nav-link">
+                        <i class="fa-regular fa-bell" style="color: #ffdd00;"></i>
+                        <p id="nav_cont_noti">
+                            Notificaciones
+                        </p>
+                    </a>
                 </li>
                 <li id="nav_favoritos" class="nav-item">
-                  <a id="active_nav_favoritos" href="../views/favoritos.php" class="nav-link">
-                  <i class="fa-regular fa-heart" style="color: #d10000;"></i>
-                    <p id="nav_cont_fav">
-                      Favoritos
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-header">Producto</li>
+                    <a id="active_nav_favoritos" href="../views/favoritos.php" class="nav-link">
+                    <i class="fa-regular fa-heart" style="color: #d10000;"></i>
+                        <p id="nav_cont_fav">
+                            Favoritos
+                        </p>
+                    </a>
+                </li>`;
+            if (usuario.tipo_usuario==1) {
+                template+=`<li class="nav-header">Producto</li>
                 <li id="nav_marcas" class="nav-item">
                     <a id="active_nav_marcas" href="../views/marcas.php" class="nav-link">
-                    <i class="fa-solid fa-tags" style="color: #005eff;"></i>
-                    <p id="nav_cont_marc">
-                      Marcas
-                    </p>
-                  </a>
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
                 </li>
-            `;
+                `;
+            }else if(usuario.tipo_usuario==2){
+                template+=`<li class="nav-header">Producto</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../views/marcas.php" class="nav-link">
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
+                </li>
+                `;
+            }else if(usuario.tipo_usuario==3){
+                template+=`<li class="nav-header">Producto</li>
+                <li id="nav_marcas" class="nav-item">
+                    <a id="active_nav_marcas" href="../views/marcas.php" class="nav-link">
+                        <i class="fa-solid fa-tags" style="color: #005eff;"></i>
+                        <p id="nav_cont_marc">
+                            Marcas
+                        </p>
+                    </a>
+                </li>
+                `;    
+            }
         }
         $('#loader_2').hide(500);
         $('#menu_lateral').html(template);
-
     }
 
     async function verificar_sesion() {
@@ -363,15 +386,19 @@ $(document).ready(function(){
                 // console.log(productos);
                 if (response !='') {//si estamos logueados entonces....
                     let sesion=JSON.parse(response);
-                    mostrar_navegacion(sesion);
-                    mostrar_sidebar(sesion);
-                    $('#active_nav_marcas').addClass('active bg-black');
-                    $('#avatar_menu').attr('src','../util/img/users/' + sesion.avatar);
-                    $('#usuario_menu').text(sesion.user);
-                    read_notificaciones();//trae las notificaciones dependiendo del usuario
-                    read_favoritos();//
-                    read_all_marcas();
-                    CloseLoader();
+                    if (sesion.tipo_usuario!=4) {
+                        mostrar_navegacion(sesion);
+                        mostrar_sidebar(sesion);
+                        $('#active_nav_marcas').addClass('active bg-black');
+                        $('#avatar_menu').attr('src','../util/img/users/' + sesion.avatar);
+                        $('#usuario_menu').text(sesion.user);
+                        read_notificaciones();//trae las notificaciones dependiendo del usuario
+                        read_favoritos();//
+                        read_all_marcas();
+                        CloseLoader();
+                    } else {
+                        location.href='../index.php';
+                    }
                 }else{
                     location.href='login.php';
                 }
@@ -384,7 +411,7 @@ $(document).ready(function(){
                 icon: 'error',
                 title: 'Hubo algún error!!',
                 text: 'Por favor verifique su conexión '+data.status,
-              })
+            })
         }
     }//cuando ya hay una sesion verificada, no se puede volver a iniciar sesion
 
@@ -411,16 +438,17 @@ $(document).ready(function(){
                     "processing":true,
                     columns: [
                         {data: "nombre"},
+                        {data: "descripcion"},
                         {
                             'render':function(data,type,datos,meta){
-                                return `<img width="100" height="100" src="../util/img/marca/${datos.imagen}">`;
+                                return `<img width="100" height="100" object-fit="cover" src="../util/img/marca/${datos.imagen}">`;
                             }
                         },
                         {data: "fecha_creacion"},
                         {
                             'render':function(data,type,datos,meta){
                                 return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         },
                     ],
@@ -477,7 +505,7 @@ $(document).ready(function(){
                 icon: 'error',
                 title: 'Hubo algún error!!',
                 text: 'Por favor verifique su conexión '+data.status,
-              })
+            })
         }
     }
 
@@ -555,6 +583,7 @@ $(document).ready(function(){
 
     //El uso de eventos--------------------------------------------------------------
     $(document).on('click', '.edit', function (e) { // Utilizamos function en lugar de ()=>
+        $('#form_marca_mod').trigger('reset');//reseteamos el formulario
         let elemento = e.currentTarget; // Utilizamos e.currentTarget para obtener el elemento que desencadenó el evento
         let id = $(elemento).attr('id');
         let nombre = $(elemento).attr('nombre');
@@ -564,6 +593,7 @@ $(document).ready(function(){
         $('#widget_imagen_marca').attr('src','../util/img/marca/'+img);
         $('#nom_marc_mod').val(nombre);
         $('#id_marc_mod').val(id);
+        // console.log(id);
     });
 
     async function editar_marca(datos){
@@ -573,10 +603,11 @@ $(document).ready(function(){
         })
         if (data.ok) {
             let response = await data.text();
-            console.log(response);
             try {
                 let respuesta = JSON.parse(response);
+                // console.log(respuesta);
                 if (respuesta.mensaje=="success") {
+                    $('#form_marca_mod').trigger('reset');//reseteamos el formulario
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -585,9 +616,13 @@ $(document).ready(function(){
                         timer: 1500
                     }).then(function(){
                         $('#widget_nombre_marca').text(respuesta.nombre_marca);
-                        $('#widget_imagen_marca').attr('src','../util/img/marca/'+respuesta.img);
-                        $('#form-marca-mod').trigger('reset');//reseteamos el formulario
+                        if(respuesta.img!=''){
+                            $('#widget_imagen_marca').attr('src','../util/img/marca/'+respuesta.img);
+                        }
                         read_all_marcas();
+                        $('#form_marca_mod').trigger('reset');//reseteamos el formulario
+                        //con la ayuda del selector de jquery quitamos el modal
+                        $('#modal_editar_marca').modal('hide')//hide para ocultar el modal con el selector
                     })
                 }else if(respuesta.mensaje=="danger"){
                     Swal.fire({
@@ -606,7 +641,6 @@ $(document).ready(function(){
                         text: 'No intente vulnerar el sistema.'
                     })
                 }
-                
             }
         } else {
             Swal.fire({
@@ -619,14 +653,15 @@ $(document).ready(function(){
 
     $.validator.setDefaults({
         submitHandler: function () {
-            let funcion='editar_marca';
-            let datos=new FormData($('#form-marca-mod')[0]);
+            let funcion="editar_marca";
+            let datos=new FormData($('#form_marca_mod')[0]);
             datos.append('funcion',funcion);
-            editar_marca(datos);//mandamos los datos a la funcion
+            editar_marca(datos);
+            //editar_marca(datos);//mandamos los datos a la funcion
         }
     });
 
-    $('#form-marca-mod').validate({//este tipo de reglas vienen por defecto
+    $('#form_marca_mod').validate({//este tipo de reglas vienen por defecto
         rules: {
             nom_marc_mod: {
                 required: true
@@ -658,6 +693,88 @@ $(document).ready(function(){
         }
     });
 
+    async function eliminar_marca(id,nombre){
+        let funcion="eliminar_marca";
+        let respuesta=''
+        let data = await fetch('../controllers/MarcaController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion+'&&id='+id+'&&nombre='+nombre
+        })
+        if (data.ok) {
+            let response = await data.text();
+            // console.log(response);
+            try {
+                respuesta = JSON.parse(response);
+                // console.log(marcas);
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                if (response=='error') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cuidado!!',
+                        text: 'No intente vulnerar el sistema.'
+                    })
+                }
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+        return respuesta;
+    }
+
+    $(document).on('click', '.remove', function (e) { // Utilizamos function en lugar de ()=>
+        let elemento = e.currentTarget; // Utilizamos e.currentTarget para obtener el elemento que desencadenó el evento
+        let id = $(elemento).attr('id');
+        let nombre = $(elemento).attr('nombre');
+        let img = $(elemento).attr('img');
+        // console.log(id,nombre,img);
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success ml-2',
+                cancelButton: 'btn btn-danger mr-2'
+            },
+            buttonsStyling: false
+        })
+        swalWithBootstrapButtons.fire({
+            title: 'Estas seguro de eliminar la marca '+nombre+'?',
+            text: "You won't be able to revert this!",
+            imageUrl: '../util/img/marca/'+img,
+            imageWidth: 100,
+            imageHeight: 100,
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminar_marca(id,nombre).then(respuesta=>{
+                    if (respuesta.mensaje=='success'){
+                        swalWithBootstrapButtons.fire(
+                            'Deleted!',
+                            'Your brand '+nombre+' has been deleted.',
+                            'success'
+                        )
+                        read_all_marcas();
+                    }
+                })
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your brand '+nombre+' is safe :)',
+                    'error'
+                )
+            }
+        })
+    });
 })
 
 // idioma del DATATABLE

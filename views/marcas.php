@@ -1,6 +1,21 @@
 <?php
 include_once 'Layouts/general/header.php';
 ?>
+<!-- Agrega el siguiente estilo en la sección <style> -->
+<style>
+    .widget-user-image {
+        text-align: center;
+    }
+
+    .widget-user-image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 50%;
+    }
+</style>
+
 <div class="modal" id="modal_crear_marca" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -87,8 +102,8 @@ include_once 'Layouts/general/header.php';
                 </div>
                 <!-- Ahora creamos el formulario -->
                 <!-- Ahora vamos a permitir el uso de las imgs -->
-                <form id="form-marca-mod" enctype="multipart/form-data">
-                    <input type="hidden" id="id_marca_mod" name="id_marca_mod">
+                <form id="form_marca_mod" enctype="multipart/form-data">
+                    <input type="hidden" id="id_marc_mod" name="id_marc_mod">
                     <div class="form-group">
                         <label for="nom_marc_mod">Nombre de la marca</label>
                         <input type="text" name="nom_marc_mod" class="form-control" id="nom_marc_mod"
@@ -173,4 +188,4 @@ include_once 'Layouts/general/header.php';
 include_once 'Layouts/general/footer.php';
 ?>
 
-<script src="marcas1.js"></script>
+<script src="marcas2.js"></script>
