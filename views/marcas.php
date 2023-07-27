@@ -74,11 +74,15 @@ include_once 'Layouts/general/header.php';
                     </div>
                     <style>
                         .card-footer .description-block {
-                            color: white; /* Cambia el color del texto a blanco */
-                            border-color: white; /* Cambia el color del borde a blanco */
+                            color: white;
+                            /* Cambia el color del texto a blanco */
+                            border-color: white;
+                            /* Cambia el color del borde a blanco */
                         }
+
                         .card-footer {
-                            background-color: black; /* Establece el fondo en negro (black) */
+                            background-color: black;
+                            /* Establece el fondo en negro (black) */
                         }
                     </style>
                     <div class="card-footer">
@@ -161,29 +165,44 @@ include_once 'Layouts/general/header.php';
 
     <!-- Default box -->
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Marca <button class="btn btn-success" type="button" data-bs-toggle='modal'
-                    data-bs-target="#modal_crear_marca">+</button></h3>
-            <div class="card-tools">
+        <div class="card-header p-2">
+            <ul class="nav nav-pills">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                     <i class="fas fa-minus"></i>
                 </button>
-            </div>
+                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Marcas</a></li>
+                <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Solicitudes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Solicitudes por aprobar</a></li>
+            </ul>
         </div>
         <div class="card-body">
-            <table id="marca" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Marca</th>
-                        <th>Descripcion</th>
-                        <th>Imagen</th>
-                        <th>Fecha de Creación</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="tab-content">
+                <div class="active tab-pane" id="activity">
+                    <center>
+                        <button class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_marca">Agregar Marca</button>
+                    </center>
+                    <table id="marca" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Imagen</th>
+                                <th>Fecha de Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="timeline">
+                    tab 2
+                </div>
+                <div class="tab-pane" id="settings">
+                    tab 3
+                </div>
+            </div>
         </div>
+
         <!-- /.card-body -->
         <div class="card-footer">
             Footer
