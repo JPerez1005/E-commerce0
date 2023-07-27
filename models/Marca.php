@@ -18,12 +18,13 @@
             return $this->objetos;
         }
 
-        function crear($nombre,$nombre_imagen){
-            $sql="INSERT INTO marca(nombre,imagen)
-                    VALUES(:nombre, :imagen)";
+        function crear($nombre,$desc,$nombre_imagen){
+            $sql="INSERT INTO marca(nombre,descripcion,imagen)
+                    VALUES(:nombre, :descripcion, :imagen)";
             $query=$this->acceso->prepare($sql);
             $variables=array(
                 ':nombre'=>$nombre,
+                ':descripcion'=>$desc,
                 ':imagen'=>$nombre_imagen,
             );
             $query->execute($variables);
@@ -43,23 +44,25 @@
             return $this->objetos;
         }
 
-        function editar($id_marca,$nombre,$nombre_imagen){
+        function editar($id_marca,$nombre,$desc,$nombre_imagen){
             if ($nombre_imagen!='') {
-                $sql="UPDATE marca SET nombre=:nombre, imagen=:img
+                $sql="UPDATE marca SET nombre=:nombre,descripcion=:descripcion, imagen=:img
                         WHERE id=:id_marca";
                 $query=$this->acceso->prepare($sql);
                 $variables=array(
                     ':nombre'=>$nombre,
+                    ':descripcion'=>$desc,
                     ':img'=>$nombre_imagen,
                     ':id_marca'=>$id_marca
                 );
                 $query->execute($variables);
             } else {
-                $sql="UPDATE marca SET nombre=:nombre
+                $sql="UPDATE marca SET nombre=:nombre,descripcion=:descripcion
                         WHERE id=:id_marca";
                 $query=$this->acceso->prepare($sql);
                 $variables=array(
                     ':nombre'=>$nombre,
+                    ':descripcion'=>$desc,
                     ':id_marca'=>$id_marca
                 );
                 $query->execute($variables);

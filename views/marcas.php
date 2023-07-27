@@ -32,6 +32,11 @@ include_once 'Layouts/general/header.php';
                             placeholder="Ingrese el Nombre de la marca">
                     </div>
                     <div class="form-group">
+                        <label for="desc">Descripción de la marca</label>
+                        <input type="text" name="desc" class="form-control" id="desc"
+                            placeholder="Ingrese la Descripción de la marca">
+                    </div>
+                    <div class="form-group">
                         <label for="exampleInputFile">Imagen de la marca</label>
                         <div class="input-group">
                             <div class="custom-file">
@@ -62,7 +67,7 @@ include_once 'Layouts/general/header.php';
                 <div class="card card-widget widget-user">
                     <div class="widget-user-header">
                         <h3 id="widget_nombre_marca" class="widget-user-username"></h3>
-                        <h5 class="widget-user-desc">Founder &amp; CEO</h5>
+                        <h5 id="widget_desc_marca" class="widget-user-desc"></h5>
                     </div>
                     <div class="widget-user-image">
                         <img id="widget_imagen_marca" class="img-circle elevation-4" src="" alt="Imagen Marca">
@@ -72,7 +77,6 @@ include_once 'Layouts/general/header.php';
                             color: white; /* Cambia el color del texto a blanco */
                             border-color: white; /* Cambia el color del borde a blanco */
                         }
-
                         .card-footer {
                             background-color: black; /* Establece el fondo en negro (black) */
                         }
@@ -108,6 +112,11 @@ include_once 'Layouts/general/header.php';
                         <label for="nom_marc_mod">Nombre de la marca</label>
                         <input type="text" name="nom_marc_mod" class="form-control" id="nom_marc_mod"
                             placeholder="Ingrese el Nombre de la marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc_mod">Descripción de la marca</label>
+                        <input type="text" name="desc_mod" class="form-control" id="desc_mod"
+                            placeholder="Ingrese la Descripción de la marca">
                     </div>
                     <div class="form-group">
                         <label for="exampleInputFile">Imagen de la marca</label>
@@ -166,6 +175,7 @@ include_once 'Layouts/general/header.php';
                 <thead>
                     <tr>
                         <th>Marca</th>
+                        <th>Descripcion</th>
                         <th>Imagen</th>
                         <th>Fecha de Creación</th>
                         <th>Acciones</th>

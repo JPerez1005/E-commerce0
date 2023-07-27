@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-07-2023 a las 06:23:18
+-- Tiempo de generación: 27-07-2023 a las 04:09:31
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -20,15 +20,11 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `e-commerce0`
 --
-CREATE DATABASE IF NOT EXISTS `e-commerce0` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `e-commerce0`;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `caracteristica`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `caracteristica` (
@@ -54,8 +50,6 @@ INSERT INTO `caracteristica` (`id`, `titulo`, `descripcion`, `fecha_creacion`, `
 --
 -- Estructura de tabla para la tabla `categoria`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `categoria` (
   `id` int(11) NOT NULL,
@@ -77,8 +71,6 @@ INSERT INTO `categoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `est
 
 --
 -- Estructura de tabla para la tabla `departamentos`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `departamentos` (
@@ -130,8 +122,6 @@ INSERT INTO `departamentos` (`id_departamento`, `departamento`) VALUES
 --
 -- Estructura de tabla para la tabla `favorito`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `favorito` (
   `id` int(11) NOT NULL,
@@ -148,14 +138,12 @@ CREATE TABLE `favorito` (
 
 INSERT INTO `favorito` (`id`, `url`, `fecha_creacion`, `estado`, `id_usuario`, `id_producto_tienda`) VALUES
 (1, 'views/descripcion.php?name=Whisky Buchanan\'s Deluxe&&id=bB9Rph+GtfM4URyyszp2Gw==', '2023-05-25 23:19:28', 'A', 1, 2),
-(2, 'views/descripcion.php?name=Gaseosa Coca Cola sabor original&&id=oBNdnmI70tGU4vNlwJ7oDg==', '2023-05-26 21:28:15', 'A', 1, 1);
+(2, 'views/descripcion.php?name=Gaseosa Coca Cola sabor original&&id=oBNdnmI70tGU4vNlwJ7oDg==', '2023-05-26 21:28:15', 'I', 1, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `historial`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `historial` (
@@ -355,14 +343,65 @@ INSERT INTO `historial` (`id`, `descripcion`, `fecha`, `id_tipo_historial`, `id_
 (181, 'Ha editado sus datos personales, ha hecho los siguientes cambios: Su telefono cambio de 3118541945 a 3118541948.', '2023-07-20 13:30:27', 1, 1, 1),
 (182, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-20 21:02:56', 2, 5, 1),
 (183, 'Has creado una marca: louis vuitton', '2023-07-22 13:51:14', 2, 6, 1),
-(184, 'Has creado una marca: Jordan', '2023-07-22 14:07:37', 2, 6, 1);
+(184, 'Has creado una marca: Jordan', '2023-07-22 14:07:37', 2, 6, 1),
+(185, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de  a louis vuittone,', '2023-07-23 16:25:41', 1, 6, 1),
+(186, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de  a louis vuittone,', '2023-07-23 16:25:53', 1, 6, 1),
+(187, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de  a Jordan air,', '2023-07-23 18:22:26', 1, 6, 1),
+(188, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan a Jordan air,', '2023-07-23 18:23:59', 1, 6, 1),
+(189, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan air a Jordan air1,', '2023-07-23 18:37:49', 1, 6, 1),
+(190, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Buchanan\'s a Buchanan\'s2,', '2023-07-23 18:48:52', 1, 6, 1),
+(191, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Buchanan\'s2 a Buchanan\'s,', '2023-07-23 20:59:46', 1, 6, 1),
+(192, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan air1 a Jordan air2,', '2023-07-23 21:02:07', 1, 6, 1),
+(193, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan air2 a Jordan air3,', '2023-07-23 21:02:38', 1, 6, 1),
+(194, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Coca-Cola a Coca-Cola1,', '2023-07-23 21:11:45', 1, 6, 1),
+(195, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Nike a Nike2,', '2023-07-23 21:12:02', 1, 6, 1),
+(196, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Adidas a Adidas2,', '2023-07-23 21:19:04', 1, 6, 1),
+(197, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-23 21:29:32', 1, 6, 1),
+(198, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Adidas2 a Adidas,La imagen de la marca fue cambiada', '2023-07-23 21:29:53', 1, 6, 1),
+(199, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Nike2 a Nike,La imagen de la marca fue cambiada', '2023-07-23 21:30:05', 1, 6, 1),
+(200, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-23 21:33:04', 1, 6, 1),
+(201, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Coca-Cola1 a Coca-Cola,La imagen de la marca fue cambiada', '2023-07-23 21:33:30', 1, 6, 1),
+(202, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-23 21:36:23', 1, 6, 1),
+(203, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-23 21:41:04', 1, 6, 1),
+(204, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan air3 a Jordan air,', '2023-07-24 08:06:11', 1, 6, 1),
+(205, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:09:41', 1, 6, 1),
+(206, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:12:41', 1, 6, 1),
+(207, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:15:23', 1, 6, 1),
+(208, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:17:03', 1, 6, 1),
+(209, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:18:11', 1, 6, 1),
+(210, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su nombre de Jordan air a Jordan,La imagen de la marca fue cambiada', '2023-07-24 08:19:54', 1, 6, 1),
+(211, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:20:02', 1, 6, 1),
+(212, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:20:11', 1, 6, 1),
+(213, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:23:44', 1, 6, 1),
+(214, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:24:11', 1, 6, 1),
+(215, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 08:45:19', 1, 6, 1),
+(216, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:49:26', 1, 6, 1),
+(217, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:50:13', 1, 6, 1),
+(218, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:50:24', 1, 6, 1),
+(219, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:51:21', 1, 6, 1),
+(220, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:54:36', 1, 6, 1),
+(221, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:55:22', 1, 6, 1),
+(222, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:57:30', 1, 6, 1),
+(223, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 09:58:19', 1, 6, 1),
+(224, 'Has creado una marca: Asus', '2023-07-24 10:09:29', 2, 6, 1),
+(225, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 10:10:31', 1, 6, 1),
+(226, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 10:12:40', 1, 6, 1),
+(227, 'Has editado una marca: ha hecho los siguientes cambios: La imagen de la marca fue cambiada', '2023-07-24 10:12:54', 1, 6, 1),
+(228, 'Has eliminado una marca: Asus', '2023-07-24 12:07:31', 3, 6, 1),
+(229, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-26 11:00:01', 3, 5, 1),
+(230, 'Se agregó a favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-26 11:00:02', 2, 5, 1),
+(231, 'Se removió de favoritos el producto: Gaseosa Coca Cola sabor original', '2023-07-26 11:00:11', 3, 5, 1),
+(232, 'Has creado una marca: Puma', '2023-07-26 19:19:55', 2, 6, 1),
+(233, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su descripción de j a Marca de computadores,', '2023-07-26 19:51:26', 1, 6, 1),
+(234, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su descripción de i a Marca de zapatos,', '2023-07-26 19:51:45', 1, 6, 1),
+(235, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su descripción de h a Marca de ropa y zapatos de clase entre otras cosa,', '2023-07-26 19:56:43', 1, 6, 1),
+(236, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su descripción de Marca de ropa y zapatos de clase entre otras cosa a Marca de ropa y zapatos de clase entre otras cosa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,', '2023-07-26 19:56:54', 1, 6, 1),
+(237, 'Has editado una marca: ha hecho los siguientes cambios: Una marca cambió su descripción de Marca de ropa y zapatos de clase entre otras cosa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa a Marca de ropa,', '2023-07-26 19:57:39', 1, 6, 1);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `imagen`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `imagen` (
@@ -388,39 +427,38 @@ INSERT INTO `imagen` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `estado
 --
 -- Estructura de tabla para la tabla `marca`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `marca` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
-  `imagen` varchar(100) NOT NULL DEFAULT 'producto_default.jpg',
+  `imagen` varchar(1000) NOT NULL DEFAULT 'producto_default.jpg',
   `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_edicion` datetime NOT NULL DEFAULT current_timestamp(),
-  `estado` varchar(10) NOT NULL DEFAULT 'A'
+  `estado` varchar(10) NOT NULL DEFAULT 'A',
+  `descripcion` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `marca`
 --
 
-INSERT INTO `marca` (`id`, `nombre`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`) VALUES
-(1, 'Coca-Cola', 'producto_default.jpg', '2023-05-18 16:20:48', '2023-05-18 16:20:48', 'A'),
-(2, 'Buchanan\'s', 'producto_default.jpg', '2023-05-18 16:21:48', '2023-05-18 16:21:48', 'A'),
-(3, 'nike', '64bc12a0c7509-nikeLogo.jpg', '2023-07-22 12:32:16', '2023-07-22 12:32:16', 'I'),
-(4, 'nike', '64bc131f1bef9-nikeLogo.jpg', '2023-07-22 12:34:23', '2023-07-22 12:34:23', 'I'),
-(5, 'Nike', '64bc13abbc78d-nikeLogo.jpg', '2023-07-22 12:36:43', '2023-07-22 12:36:43', 'A'),
-(6, 'Adidas', '64bc14e06e0d1-adidasLogo.jpg', '2023-07-22 12:41:52', '2023-07-22 12:41:52', 'I'),
-(7, 'Adidas', '64bc15395810a-adidas originals.jpg', '2023-07-22 12:43:21', '2023-07-22 12:43:21', 'A'),
-(8, 'louis vuitton', '64bc2522483e0-louis vouton.jpg', '2023-07-22 13:51:14', '2023-07-22 13:51:14', 'A'),
-(9, 'Jordan', '64bc28f98827d-Jordan.jpg', '2023-07-22 14:07:37', '2023-07-22 14:07:37', 'A');
+INSERT INTO `marca` (`id`, `nombre`, `imagen`, `fecha_creacion`, `fecha_edicion`, `estado`, `descripcion`) VALUES
+(1, 'Coca-Cola', '64be94f65a628-coca-cola.jpg', '2023-05-18 16:20:48', '2023-05-18 16:20:48', 'A', 'a'),
+(2, 'Buchanan\'s', '64bde2e0a2d3c-buchanans-1.jpg', '2023-05-18 16:21:48', '2023-05-18 16:21:48', 'A', 'b'),
+(3, 'nike', '64bc12a0c7509-nikeLogo.jpg', '2023-07-22 12:32:16', '2023-07-22 12:32:16', 'I', 'c'),
+(4, 'nike', '64bc131f1bef9-nikeLogo.jpg', '2023-07-22 12:34:23', '2023-07-22 12:34:23', 'I', 'd'),
+(5, 'Nike', '64be8fa51a430-nike.jpg', '2023-07-22 12:36:43', '2023-07-22 12:36:43', 'A', 'e'),
+(6, 'Adidas', '64bc14e06e0d1-adidasLogo.jpg', '2023-07-22 12:41:52', '2023-07-22 12:41:52', 'I', 'f'),
+(7, 'Adidas', '64be918b6522e-adidas2.jpg', '2023-07-22 12:43:21', '2023-07-22 12:43:21', 'A', 'g'),
+(8, 'louis vuitton', '64be7b6037396-louis vouton.jpg', '2023-07-22 13:51:14', '2023-07-22 13:51:14', 'A', 'Marca de ropa'),
+(9, 'Jordan', '64be806f8d9ff-jordan.jfif', '2023-07-22 14:07:37', '2023-07-22 14:07:37', 'A', 'Marca de zapatos'),
+(10, 'Asus', '64be9467af5d8-asus.jpg', '2023-07-24 10:09:29', '2023-07-24 10:09:29', 'A', 'Marca de computadores'),
+(11, 'Puma', '64c1b82bc18e9-puma.jpg', '2023-07-26 19:19:55', '2023-07-26 19:19:55', 'A', 'marca deportiva');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `modulo`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `modulo` (
@@ -446,8 +484,6 @@ INSERT INTO `modulo` (`id`, `nombre`, `icono`, `estado`) VALUES
 
 --
 -- Estructura de tabla para la tabla `municipios`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `municipios` (
@@ -1568,8 +1604,6 @@ INSERT INTO `municipios` (`id_municipio`, `municipio`, `estado`, `departamento_i
 --
 -- Estructura de tabla para la tabla `notificacion`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `notificacion` (
   `id` int(11) NOT NULL,
@@ -1612,8 +1646,6 @@ INSERT INTO `notificacion` (`id`, `titulo`, `asunto`, `contenido`, `imagen`, `ur
 --
 -- Estructura de tabla para la tabla `pregunta`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `pregunta` (
   `id` int(11) NOT NULL,
@@ -1649,8 +1681,6 @@ INSERT INTO `pregunta` (`id`, `contenido`, `fecha_creacion`, `estado`, `respuest
 --
 -- Estructura de tabla para la tabla `producto`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `producto` (
   `id` int(11) NOT NULL,
@@ -1677,8 +1707,6 @@ INSERT INTO `producto` (`id`, `nombre`, `SKU`, `detalles`, `imagen_principal`, `
 --
 -- Estructura de tabla para la tabla `producto_subcategoria`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `producto_subcategoria` (
   `id` int(11) NOT NULL,
@@ -1701,8 +1729,6 @@ INSERT INTO `producto_subcategoria` (`id`, `fecha_creacion`, `fecha_edicion`, `e
 
 --
 -- Estructura de tabla para la tabla `producto_tienda`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `producto_tienda` (
@@ -1732,8 +1758,6 @@ INSERT INTO `producto_tienda` (`id`, `precio`, `cantidad`, `descuento`, `garanti
 --
 -- Estructura de tabla para la tabla `resena`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `resena` (
   `id` int(11) NOT NULL,
@@ -1759,8 +1783,6 @@ INSERT INTO `resena` (`id`, `calificacion`, `descripcion`, `fecha_creacion`, `fe
 
 --
 -- Estructura de tabla para la tabla `respuesta`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `respuesta` (
@@ -1794,8 +1816,6 @@ INSERT INTO `respuesta` (`id`, `contenido`, `fecha_creacion`, `estado`, `id_preg
 --
 -- Estructura de tabla para la tabla `subcategoria`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `subcategoria` (
   `id` int(11) NOT NULL,
@@ -1818,8 +1838,6 @@ INSERT INTO `subcategoria` (`id`, `nombre`, `fecha_creacion`, `fecha_edicion`, `
 
 --
 -- Estructura de tabla para la tabla `tienda`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `tienda` (
@@ -1848,8 +1866,6 @@ INSERT INTO `tienda` (`id`, `nombre`, `razon_social`, `direccion`, `RUC`, `image
 --
 -- Estructura de tabla para la tabla `tipo_historial`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `tipo_historial` (
   `id` int(11) NOT NULL,
@@ -1872,8 +1888,6 @@ INSERT INTO `tipo_historial` (`id`, `nombre`, `icono`, `estado`) VALUES
 --
 -- Estructura de tabla para la tabla `tipo_usuario`
 --
--- Creación: 09-07-2023 a las 00:16:28
---
 
 CREATE TABLE `tipo_usuario` (
   `id` int(11) NOT NULL,
@@ -1887,15 +1901,14 @@ CREATE TABLE `tipo_usuario` (
 
 INSERT INTO `tipo_usuario` (`id`, `tipo`, `estado`) VALUES
 (1, 'Root', 'A'),
-(2, 'Cliente', 'A'),
-(3, 'Vendedor', 'A');
+(2, 'Administrador', 'A'),
+(3, 'Vendedor', 'A'),
+(4, 'Cliente', 'A');
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `usuario`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `usuario` (
@@ -1938,8 +1951,6 @@ INSERT INTO `usuario` (`id`, `user`, `pass`, `nombres`, `apellidos`, `direccion`
 
 --
 -- Estructura de tabla para la tabla `usuario_municipio`
---
--- Creación: 09-07-2023 a las 00:16:28
 --
 
 CREATE TABLE `usuario_municipio` (
@@ -2174,7 +2185,7 @@ ALTER TABLE `favorito`
 -- AUTO_INCREMENT de la tabla `historial`
 --
 ALTER TABLE `historial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
 
 --
 -- AUTO_INCREMENT de la tabla `imagen`
@@ -2186,7 +2197,7 @@ ALTER TABLE `imagen`
 -- AUTO_INCREMENT de la tabla `marca`
 --
 ALTER TABLE `marca`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `modulo`
@@ -2264,7 +2275,7 @@ ALTER TABLE `tipo_historial`
 -- AUTO_INCREMENT de la tabla `tipo_usuario`
 --
 ALTER TABLE `tipo_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

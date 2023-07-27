@@ -447,7 +447,7 @@ $(document).ready(function(){
                         {data: "fecha_creacion"},
                         {
                             'render':function(data,type,datos,meta){
-                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
                                         <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
                             }
                         },
@@ -455,7 +455,6 @@ $(document).ready(function(){
                     "destroy":true,
                     "language":colombia
                 });
-
             } catch (error) {
                 console.error(error);
                 console.log(response);
@@ -526,6 +525,9 @@ $(document).ready(function(){
         nom_marc: {
             required: true
         },
+        desc: {
+            required: true
+        },
         img_marc: {
             required: true,
             extension: "png|jpg|jpeg|jfif"
@@ -533,6 +535,9 @@ $(document).ready(function(){
     },
     messages: {
         nom_marc:{
+            required: "*Este campo es obligatorio"
+        },
+        desc:{
             required: "*Este campo es obligatorio"
         },
         img_marc:{
@@ -588,10 +593,13 @@ $(document).ready(function(){
         let id = $(elemento).attr('id');
         let nombre = $(elemento).attr('nombre');
         let img = $(elemento).attr('img');
+        let descripcion = $(elemento).attr('desc');
         // console.log(id, nombre, img);
         $('#widget_nombre_marca').text(nombre);
+        $('#widget_desc_marca').text(descripcion);
         $('#widget_imagen_marca').attr('src','../util/img/marca/'+img);
         $('#nom_marc_mod').val(nombre);
+        $('#desc_mod').val(descripcion);
         $('#id_marc_mod').val(id);
         // console.log(id);
     });
@@ -616,6 +624,7 @@ $(document).ready(function(){
                         timer: 1500
                     }).then(function(){
                         $('#widget_nombre_marca').text(respuesta.nombre_marca);
+                        $('#widget_desc_marca').text(respuesta.desc_marca);
                         if(respuesta.img!=''){
                             $('#widget_imagen_marca').attr('src','../util/img/marca/'+respuesta.img);
                         }
@@ -666,12 +675,18 @@ $(document).ready(function(){
             nom_marc_mod: {
                 required: true
             },
+            desc_mod: {
+                required: true
+            },
             img_marc_mod: {
                 extension: "png|jpg|jpeg|jfif"
             }
         },
         messages: {
             nom_marc_mod:{
+                required: "*Este campo es obligatorio"
+            },
+            desc_mod:{
                 required: "*Este campo es obligatorio"
             },
             img_marc_mod:{
