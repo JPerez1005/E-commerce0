@@ -13,6 +13,8 @@ $(document).ready(function(){
     // setTimeout(verificar_sesion,2000);
     verificar_sesion();
     bsCustomFileInput.init();
+    $('#btn_adm').hide();
+    $('#btn_ven').hide();
 
     async function read_notificaciones(){
         funcion="read_notificaciones";
@@ -395,7 +397,14 @@ $(document).ready(function(){
                         read_notificaciones();//trae las notificaciones dependiendo del usuario
                         read_favoritos();//
                         read_all_marcas();
-                        CloseLoader();
+                        if (sesion.tipo_usuario==1 || sesion.tipo_usuario==2) {
+                            CloseLoader();
+                            $('#btn_adm').show();
+                        } else if(sesion.tipo_usuario==3){
+                            CloseLoader();
+                            $('#btn_ven').show();
+                            read_solicitudes();
+                        }
                     } else {
                         location.href='../index.php';
                     }
@@ -447,8 +456,13 @@ $(document).ready(function(){
                         {data: "fecha_creacion"},
                         {
                             'render':function(data,type,datos,meta){
-                                return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
-                                        <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                if (datos.tipo_usuario==3) {
+                                    return `<button class="alerta_usuario btn btn-info" title="Editar Marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                                            <button class="alerta_usuario btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                } else {
+                                    return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                                            <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                                }
                             }
                         },
                     ],
@@ -464,7 +478,65 @@ $(document).ready(function(){
                 icon: 'error',
                 title: 'Hubo algún error!!',
                 text: 'Por favor verifique su conexión '+data.status,
-              })
+            })
+        }
+    }
+
+    async function read_solicitudes(){
+        funcion="read_solicitudes";
+        let data = await fetch('../controllers/SolicitudMarcaController.php',{
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:'funcion='+funcion
+        })
+        if (data.ok) {
+            let response = await data.text();
+            // console.log(response);
+            try {
+                let solicitudes = JSON.parse(response);
+                console.log(solicitudes);
+                // datatable=$('#marca').DataTable({
+                //     data: marcas,
+                //     "aaSorting":[],
+                //     "searching":true,
+                //     "scrollX":true,
+                //     "autoWidth":false,
+                //     "responsive":true,
+                //     "processing":true,
+                //     columns: [
+                //         {data: "nombre"},
+                //         {data: "descripcion"},
+                //         {
+                //             'render':function(data,type,datos,meta){
+                //                 return `<img width="100" height="100" object-fit="cover" src="../util/img/marca/${datos.imagen}">`;
+                //             }
+                //         },
+                //         {data: "fecha_creacion"},
+                //         {
+                //             'render':function(data,type,datos,meta){
+                //                 if (datos.tipo_usuario==3) {
+                //                     return `<button class="alerta_usuario btn btn-info" title="Editar Marca" type="button"><i class="fas fa-pencil-alt"></i></button>
+                //                             <button class="alerta_usuario btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                //                 } else {
+                //                     return `<button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" desc="${datos.descripcion}" class="edit btn btn-info" title="Editar Marca" type="button" data-bs-toggle="modal" data-bs-target="#modal_editar_marca"><i class="fas fa-pencil-alt"></i></button>
+                //                             <button id="${datos.id}" nombre="${datos.nombre}" img="${datos.imagen}" class="remove btn btn-danger" title="Eliminar Marca" type="button"><i class="fas fa-trash-alt"></i></button>`;
+                //                 }
+                //             }
+                //         },
+                //     ],
+                //     "destroy":true,
+                //     "language":colombia
+                // });
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
         }
     }
 
@@ -789,6 +861,101 @@ $(document).ready(function(){
                 )
             }
         })
+    });
+
+    $(document).on('click', '.alerta_usuario', function (e) { // Utilizamos function en lugar de ()=>
+        toastr.error('No tienes permiso para realizar esta accion','Error!');
+    });
+
+    // Creación de las solicitudes de las marcas
+
+    async function crear_solicitud_marca(datos){
+        let data = await fetch('../controllers/SolicitudMarcaController.php',{
+            method:'POST',
+            body: datos
+        })
+        if (data.ok) {
+            let response = await data.text();
+            // console.log(response);
+            try {
+                let respuesta = JSON.parse(response);
+                if (respuesta.mensaje=="Solicitud Marca Enviada") {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Se ha creado la solicitud de la marca.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(function(){
+                        $('#form_marca_sol').trigger('reset');//reseteamos el formulario
+                        // read_all_marcas();
+                    })
+                }
+            } catch (error) {
+                console.error(error);
+                console.log(response);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Hubo algún Error!!',
+                    text: 'Por favor Comuniquese con el area de sistemas.'
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Hubo algún error!!',
+                text: 'Por favor verifique su conexión '+data.status,
+            })
+        }
+    }
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            let funcion='crear_solicitud_marca';
+            let datos=new FormData($('#form_marca_sol')[0]);
+            datos.append('funcion',funcion);
+            crear_solicitud_marca(datos);
+        }
+    });
+
+    $('#form_marca_sol').validate({//este tipo de reglas vienen por defecto
+    rules: {
+        nom_marc_sol: {
+            required: true
+        },
+        desc_sol: {
+            required: true
+        },
+        img_marc_sol: {
+            required: true,
+            extension: "png|jpg|jpeg|jfif"
+        }
+    },
+    messages: {
+        nom_marc_sol:{
+            required: "*Este campo es obligatorio"
+        },
+        desc_sol:{
+            required: "*Este campo es obligatorio"
+        },
+        img_marc_sol:{
+            required: "*Este campo es obligatorio",
+            extension: 'Solo es valido el formato: png,jpg,jpeg'
+        }
+    },
+    errorElement: 'span',
+    errorPlacement: function (error, element) {
+      error.addClass('invalid-feedback');
+      element.closest('.form-group').append(error);
+    },
+    highlight: function (element, errorClass, validClass) {
+        $(element).addClass('is-invalid');
+        $(element).removeClass('is-valid');
+    },
+    unhighlight: function (element, errorClass, validClass) {
+        $(element).removeClass('is-invalid');
+        $(element).addClass('is-valid');
+    }
     });
 })
 

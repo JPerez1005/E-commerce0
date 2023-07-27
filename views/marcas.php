@@ -142,6 +142,49 @@ include_once 'Layouts/general/header.php';
     </div>
 </div>
 
+<div class="modal" id="modal_crear_solicitud" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Crear Solicitud para crear una marca</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Ahora vamos a permitir el uso de las imgs -->
+                <form id="form_marca_sol" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="nom_marc_sol">Nombre de la marca</label>
+                        <input type="text" name="nom_marc_sol" class="form-control" id="nom_marc_sol"
+                            placeholder="Ingrese el Nombre de la marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc_sol">Descripción de la marca</label>
+                        <input type="text" name="desc_sol" class="form-control" id="desc_sol"
+                            placeholder="Ingrese la Descripción de la marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Imagen de la marca</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="img_marc_sol" id="img_marc_sol">
+                                <label class="custom-file-label" for="exampleInputFile">Seleccione una imagen</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Este es el FOOTER--------------------------------------------------------------- -->
+                    <div class="modal-footer">
+                        <span>
+                            Esta solicitud estará en tu lista de espera para ser enviada a todos los administradores para ser revisada, si los datos son correctos se aprobará, si no se le enviara un mensaje para que haga las correciones correspondientes
+                        </span>
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <title>E-commerce 0 | Marcas</title>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -170,16 +213,17 @@ include_once 'Layouts/general/header.php';
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                     <i class="fas fa-minus"></i>
                 </button>
-                <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Marcas</a></li>
-                <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Solicitudes</a></li>
-                <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Solicitudes por aprobar</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#tab_marcas" data-toggle="tab">Marcas</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab_sol" data-toggle="tab">Solicitudes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab_por_aprobar" data-toggle="tab">Solicitudes por aprobar</a></li>
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content">
-                <div class="active tab-pane" id="activity">
+                <div class="active tab-pane" id="tab_marcas">
                     <center>
-                        <button class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_marca">Agregar Marca</button>
+                        <button id="btn_adm" class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_marca">Agregar Marca</button>
+                        <button id="btn_ven" class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_solicitud">Solicitar Marca</button>
                     </center>
                     <table id="marca" class="table table-hover">
                         <thead>
@@ -194,10 +238,10 @@ include_once 'Layouts/general/header.php';
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="tab-pane" id="timeline">
+                <div class="tab-pane" id="tab_sol">
                     tab 2
                 </div>
-                <div class="tab-pane" id="settings">
+                <div class="tab-pane" id="tab_por_aprobar">
                     tab 3
                 </div>
             </div>

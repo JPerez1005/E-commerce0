@@ -19,6 +19,7 @@ if($_POST['funcion']=='read_all_marcas'){
             'imagen'=>$objeto->imagen,
             'fecha_creacion'=>$objeto->fecha_creacion,
             'estado'=>$objeto->estado,
+            'tipo_usuario'=>$_SESSION['tipo_usuario']
         );
     }
     $jsonstring=json_encode($json);
