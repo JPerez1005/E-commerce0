@@ -174,7 +174,9 @@ include_once 'Layouts/general/header.php';
                     <!-- Este es el FOOTER--------------------------------------------------------------- -->
                     <div class="modal-footer">
                         <span>
-                            Esta solicitud estará en tu lista de espera para ser enviada a todos los administradores para ser revisada, si los datos son correctos se aprobará, si no se le enviara un mensaje para que haga las correciones correspondientes
+                            Esta solicitud estará en tu lista de espera para ser enviada a todos los administradores
+                            para ser revisada, si los datos son correctos se aprobará, si no se le enviara un mensaje
+                            para que haga las correciones correspondientes
                         </span>
                         <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-outline-success">Guardar</button>
@@ -215,15 +217,18 @@ include_once 'Layouts/general/header.php';
                 </button>
                 <li class="nav-item"><a class="nav-link active" href="#tab_marcas" data-toggle="tab">Marcas</a></li>
                 <li class="nav-item"><a class="nav-link" href="#tab_sol" data-toggle="tab">Solicitudes</a></li>
-                <li class="nav-item"><a class="nav-link" href="#tab_por_aprobar" data-toggle="tab">Solicitudes por aprobar</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab_por_aprobar" data-toggle="tab">Solicitudes por
+                        aprobar</a></li>
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content">
                 <div class="active tab-pane" id="tab_marcas">
                     <center>
-                        <button id="btn_adm" class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_marca">Agregar Marca</button>
-                        <button id="btn_ven" class="btn btn-success" type="button" data-bs-toggle='modal' data-bs-target="#modal_crear_solicitud">Solicitar Marca</button>
+                        <button id="btn_adm" class="btn btn-success" type="button" data-bs-toggle='modal'
+                            data-bs-target="#modal_crear_marca">Agregar Marca</button>
+                        <button id="btn_ven" class="btn btn-success" type="button" data-bs-toggle='modal'
+                            data-bs-target="#modal_crear_solicitud">Solicitar Marca</button>
                     </center>
                     <table id="marca" class="table table-hover">
                         <thead>
@@ -239,7 +244,20 @@ include_once 'Layouts/general/header.php';
                     </table>
                 </div>
                 <div class="tab-pane" id="tab_sol">
-                    tab 2
+                    <table id="mis_solicitudes_marcas" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Imagen</th>
+                                <th>Estado de Envio</th>
+                                <th>Estado de Aprobación</th>
+                                <th>Fecha de Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
                 <div class="tab-pane" id="tab_por_aprobar">
                     tab 3

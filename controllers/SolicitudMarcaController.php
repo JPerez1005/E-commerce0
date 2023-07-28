@@ -47,19 +47,21 @@ if ($_POST['funcion'] == 'crear_solicitud_marca') {
 if($_POST['funcion']=='read_solicitudes'){
     $id_usuario = $_SESSION['id'];
     $solicitud_marca->read_solicitudes($id_usuario);
-    var_dump($solicitud_marca);
-    // $json=array();
-    // foreach ($marca->objetos as $objeto) {
-    //     $json[]=array(
-    //         'id'=>openssl_encrypt($objeto->id,CODE,KEY),
-    //         'nombre'=>$objeto->nombre,
-    //         'descripcion'=>$objeto->descripcion,
-    //         'imagen'=>$objeto->imagen,
-    //         'fecha_creacion'=>$objeto->fecha_creacion,
-    //         'estado'=>$objeto->estado,
-    //         'tipo_usuario'=>$_SESSION['tipo_usuario']
-    //     );
-    // }
-    // $jsonstring=json_encode($json);
-    // echo $jsonstring;
+    // var_dump($solicitud_marca);
+    $json=array();
+    foreach ($solicitud_marca->objetos as $objeto) {
+        $json[]=array(
+            'id'=>openssl_encrypt($objeto->id,CODE,KEY),
+            'nombre'=>$objeto->nombre,
+            'descripcion'=>$objeto->descripcion,
+            'imagen'=>$objeto->imagen,
+            'fecha_creacion'=>$objeto->fecha_creacion,
+            'estado'=>$objeto->estado,
+            'estado_envio'=>$objeto->estado_solicitud,
+            'estado_aprobado'=>$objeto->aprobado_por,
+            'tipo_usuario'=>$_SESSION['tipo_usuario']
+        );
+    }
+    $jsonstring=json_encode($json);
+    echo $jsonstring;
 }
