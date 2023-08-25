@@ -12,7 +12,6 @@ include_once 'Layouts/general/header.php';
         height: 100px;
         object-fit: cover;
         object-position: center;
-        border-radius: 50%;
     }
 </style>
 
@@ -187,6 +186,92 @@ include_once 'Layouts/general/header.php';
     </div>
 </div>
 
+<div class="modal" id="modal_editar_solicitud" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Editar Solicitud de la Marca</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-widget widget-user">
+                    <div class="widget-user-header">
+                        <h3 id="widget_nombre_sol" class="widget-user-username"></h3>
+                        <h5 id="widget_desc_sol" class="widget-user-desc"></h5>
+                    </div>
+                    <div class="widget-user-image">
+                        <img id="widget_imagen_sol" class="elevation-4" src="" alt="Imagen Marca">
+                    </div>
+                    <style>
+                        .card-footer .description-block {
+                            color: white;
+                            /* Cambia el color del texto a blanco */
+                            border-color: white;
+                            /* Cambia el color del borde a blanco */
+                        }
+
+                        .card-footer {
+                            background-color: black;
+                            /* Establece el fondo en negro (black) */
+                        }
+                    </style>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">3,200</h5>
+                                    <span class="description-text">SALES</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">13,000</h5>
+                                    <span class="description-text">FOLLOWERS</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="description-block">
+                                    <h5 class="description-header">35</h5>
+                                    <span class="description-text">PRODUCTS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ahora creamos el formulario -->
+                <!-- Ahora vamos a permitir el uso de las imgs -->
+                <form id="form_marca_mod_sol" enctype="multipart/form-data">
+                    <input type="hidden" id="id_marc_mod_sol" name="id_marc_mod_sol">
+                    <div class="form-group">
+                        <label for="nom_marc_mod_sol">Nombre de la marca</label>
+                        <input type="text" name="nom_marc_mod_sol" class="form-control" id="nom_marc_mod_sol"
+                            placeholder="Ingrese el Nombre de la marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc_mod_sol">Descripción de la marca</label>
+                        <input type="text" name="desc_mod_sol" class="form-control" id="desc_mod_sol"
+                            placeholder="Ingrese la Descripción de la marca">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Imagen de la marca</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="img_marc_mod_sol" id="img_marc_mod_sol">
+                                <label class="custom-file-label" for="exampleInputFile">Seleccione una imagen</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Este es el FOOTER--------------------------------------------------------------- -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-outline-success">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <title>E-commerce 0 | Marcas</title>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -250,7 +335,7 @@ include_once 'Layouts/general/header.php';
                                 <th>Marca</th>
                                 <th>Descripcion</th>
                                 <th>Imagen</th>
-                                <th>Estado de Envio</th>
+                                <th style="width: 15%">Estado de Envio</th>
                                 <th>Estado de Aprobación</th>
                                 <th>Fecha de Creación</th>
                                 <th>Acciones</th>
@@ -260,7 +345,19 @@ include_once 'Layouts/general/header.php';
                     </table>
                 </div>
                 <div class="tab-pane" id="tab_por_aprobar">
-                    tab 3
+                    <table id="solicitudes_por_aprobar" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Marca</th>
+                                <th>Descripcion</th>
+                                <th>Imagen</th>
+                                <th>Solicitante</th>
+                                <th>Fecha de Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -279,4 +376,4 @@ include_once 'Layouts/general/header.php';
 include_once 'Layouts/general/footer.php';
 ?>
 
-<script src="marcas2.js"></script>
+<script src="marcas3.js"></script>
